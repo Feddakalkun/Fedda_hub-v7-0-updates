@@ -86,7 +86,7 @@ set "BASE_DIR=%~dp0"
 if "%BASE_DIR:~-1%"=="\" set "BASE_DIR=%BASE_DIR:~0,-1%"
 set "OLLAMA=%BASE_DIR%\ollama_embeded\ollama.exe"
 set "OLLAMA_MODELS=%BASE_DIR%\ollama_embeded\models"
-set "OLLAMA_HOST=127.0.0.1:11434"
+set "OLLAMA_HOST=127.0.0.1:11435"
 
 if exist "%OLLAMA%" (
     echo Running Portable Ollama...
