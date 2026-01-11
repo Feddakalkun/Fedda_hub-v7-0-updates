@@ -18,63 +18,16 @@ if (-not (Test-Path $VoicesDir)) {
     New-Item -ItemType Directory -Path $VoicesDir -Force | Out-Null
 }
 
-# Voice Pack URLs (Open Speech Repository - Public Domain)
-$VoicePacks = @(
-    @{
-        Name        = "Emma"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0010_8k.wav"
-        Transcript  = "She had your dark suit in greasy wash water all year."
-        Description = "Young American Female - Clear, professional"
-    },
-    @{
-        Name        = "Sarah"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0011_8k.wav"
-        Transcript  = "Don't ask me to carry an oily rag like that."
-        Description = "Mature American Female - Warm, friendly"
-    },
-    @{
-        Name        = "Alex"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0012_8k.wav"
-        Transcript  = "The young prince became king heir."
-        Description = "Young American Male - Energetic, clear"
-    },
-    @{
-        Name        = "James"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0013_8k.wav"
-        Transcript  = "The lake sparkled in the red hot sun."
-        Description = "Deep American Male - Authoritative, smooth"
-    },
-    @{
-        Name        = "Lily"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0014_8k.wav"
-        Transcript  = "Bring your best compass to the third class."
-        Description = "Professional Female - Elegant, articulate"
-    },
-    @{
-        Name        = "Sophie"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0015_8k.wav"
-        Transcript  = "They took their kids from the public school."
-        Description = "Soft Female - Gentle, expressive"
-    },
-    @{
-        Name        = "Lucas"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0016_8k.wav"
-        Transcript  = "The latch on the back gate needed a nail."
-        Description = "Professional Male - Clear, confident"
-    },
-    @{
-        Name        = "Aria"
-        URL         = "https://www.voiptroubleshooter.com/open_speech/american/OSR_us_000_0017_8k.wav"
-        Transcript  = "March the tired soldiers into the compound."
-        Description = "Melodic Female - Expressive, warm"
-    },
-    @{
-        Name        = "Default"
-        URL         = "https://github.com/gradio-app/gradio/raw/main/test/test_files/audio_sample.wav"
-        Transcript  = "Hello, this is a test audio sample."
-        Description = "Generic English - Neutral baseline"
-    }
-)
+# Voice Pack URLs - DISABLED (using custom voices from assets/TTS instead)
+$VoicePacks = @()
+
+# Sync custom voices from assets/TTS
+$AssetsPath = Join-Path $RootPath "assets\TTS"
+if (Test-Path $AssetsPath) {
+    Write-Host "Syncing custom voices from assets/TTS..." -ForegroundColor Cyan
+    Copy-Item "$AssetsPath\*" $VoicesDir -Recurse -Force
+    Write-Host "Custom voices synced successfully." -ForegroundColor Green
+}
 
 Write-Host "Downloading $($VoicePacks.Count) voice samples..."
 Write-Host ""
