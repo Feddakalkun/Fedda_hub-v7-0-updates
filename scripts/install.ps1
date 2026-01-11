@@ -582,11 +582,8 @@ if (Test-Path $LegacyBackup) {
     Write-Log "Legacy backup removed."
 }
 
-# 10. Shortcut
-# 10. Install Other Components
-Install-FanvueHub
-Install-Ollama
-Install-VoxCPM
+# 10. Installation Complete
+# Note: Fanvue Hub, Ollama, and VoxCPM will be auto-installed by run.bat on first launch
 
 # 11. Final Cleanup
 Write-Log "Skipping desktop shortcut creation (use run.bat)."
