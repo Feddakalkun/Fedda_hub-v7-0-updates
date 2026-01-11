@@ -178,14 +178,14 @@ export default function CharactersPage() {
                                         const loraPath = e.target.value;
                                         setSelectedLora(loraPath);
 
-                                        // Auto-fill Bio if description.txt exists
+                                        // Auto-fill Appearance if description.txt exists
                                         if (loraPath) {
                                             try {
                                                 const res = await fetch(`/api/loras/description?path=${encodeURIComponent(loraPath)}`);
                                                 const data = await res.json();
                                                 if (data.description) {
-                                                    setNewBio(data.description);
-                                                    console.log('[UI] Auto-filled Bio from description.txt');
+                                                    setAppearance(data.description);
+                                                    console.log('[UI] Auto-filled Appearance from description.txt');
                                                 }
                                             } catch (error) {
                                                 console.error('[UI] Failed to fetch description:', error);
@@ -214,14 +214,17 @@ export default function CharactersPage() {
                                     ))}
                                 </select>
                             </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '12px', marginBottom: '8px', color: '#aaa' }}>Appearance Prompt</label>
-                                <input
-                                    value={appearance} onChange={e => setAppearance(e.target.value)}
-                                    placeholder="blonde hair, blue eyes..."
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
+                        </div>
+
+                        <div style={{ marginTop: '16px' }}>
+                            <label style={{ display: 'block', fontSize: '12px', marginBottom: '8px', color: '#aaa' }}>Appearance Prompt</label>
+                            <textarea
+                                value={appearance}
+                                onChange={e => setAppearance(e.target.value)}
+                                placeholder="blonde hair, blue eyes, freckles across nose and cheeks..."
+                                rows={3}
+                                style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px', resize: 'vertical' }}
+                            />
                         </div>
 
                         <div style={{ marginTop: '16px' }}>
