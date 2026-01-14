@@ -1,0 +1,186 @@
+{
+    "530": {
+        "inputs": {
+            "frame_rate": 24,
+            "loop_count": 0,
+            "filename_prefix": "VIDEO/WAN21/basic",
+            "format": "video/h264-mp4",
+            "pix_fmt": "yuv420p",
+            "crf": 19,
+            "save_metadata": true,
+            "save_output": true,
+            "images": [
+                "545",
+                0
+            ]
+        },
+        "class_type": "VHS_VideoCombine",
+        "_meta": {
+            "title": "Video Combine"
+        }
+    },
+    "532": {
+        "inputs": {
+            "model": "wan2.1_t2v_14B_fp8_e4m3fn.safetensors",
+            "base_precision": "fp16_fast",
+            "quantization": "disabled",
+            "load_device": "offload_device",
+            "attention_mode": "sdpa",
+            "rms_norm_function": "default"
+        },
+        "class_type": "WanVideoModelLoader",
+        "_meta": {
+            "title": "WanVideo Model Loader"
+        }
+    },
+    "537": {
+        "inputs": {
+            "image": "test.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Load Image"
+        }
+    },
+    "545": {
+        "inputs": {
+            "enable_vae_tiling": false,
+            "tile_x": 272,
+            "tile_y": 272,
+            "tile_stride_x": 144,
+            "tile_stride_y": 128,
+            "normalization": "default",
+            "vae": [
+                "546",
+                0
+            ],
+            "samples": [
+                "548",
+                0
+            ]
+        },
+        "class_type": "WanVideoDecode",
+        "_meta": {
+            "title": "WanVideo Decode"
+        }
+    },
+    "546": {
+        "inputs": {
+            "model_name": "wan_2.1_vae.safetensors",
+            "precision": "bf16",
+            "use_cpu_cache": false,
+            "verbose": false
+        },
+        "class_type": "WanVideoVAELoader",
+        "_meta": {
+            "title": "WanVideo VAE Loader"
+        }
+    },
+    "547": {
+        "inputs": {
+            "model_name": "umt5-xxl-enc-bf16.safetensors",
+            "precision": "bf16",
+            "positive_prompt": "cinematic camera pan, smooth movement",
+            "negative_prompt": "static, still image, motionless, worst quality, low quality",
+            "quantization": "disabled",
+            "use_disk_cache": true,
+            "device": "gpu"
+        },
+        "class_type": "WanVideoTextEncodeCached",
+        "_meta": {
+            "title": "WanVideo TextEncode"
+        }
+    },
+    "548": {
+        "inputs": {
+            "steps": 6,
+            "cfg": 1,
+            "shift": 8,
+            "seed": 42,
+            "force_offload": true,
+            "scheduler": "dpm++_sde",
+            "riflex_freq_index": 0,
+            "denoise_strength": 1,
+            "batched_cfg": false,
+            "rope_function": "comfy",
+            "start_step": 0,
+            "end_step": -1,
+            "add_noise_to_samples": false,
+            "model": [
+                "551",
+                0
+            ],
+            "image_embeds": [
+                "555",
+                0
+            ],
+            "text_embeds": [
+                "547",
+                0
+            ]
+        },
+        "class_type": "WanVideoSampler",
+        "_meta": {
+            "title": "WanVideo Sampler"
+        }
+    },
+    "549": {
+        "inputs": {
+            "model": [
+                "532",
+                0
+            ],
+            "lora": [
+                "554",
+                0
+            ]
+        },
+        "class_type": "WanVideoSetLoRAs",
+        "_meta": {
+            "title": "WanVideo Set LoRAs"
+        }
+    },
+    "551": {
+        "inputs": {
+            "model": [
+                "549",
+                0
+            ]
+        },
+        "class_type": "WanVideoSetBlockSwap",
+        "_meta": {
+            "title": "WanVideo Set BlockSwap"
+        }
+    },
+    "554": {
+        "inputs": {
+            "lora_0": "wan\\lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank32_bf16.safetensors",
+            "strength_0": 0.8,
+            "lora_1": "wan\\Wan2.1_T2V_14B_FusionX_LoRA.safetensors",
+            "strength_1": 1.8,
+            "lora_2": "none",
+            "strength_2": 1,
+            "lora_3": "none",
+            "strength_3": 1,
+            "lora_4": "none",
+            "strength_4": 1,
+            "low_mem_load": false,
+            "merge_loras": false
+        },
+        "class_type": "WanVideoLoraSelectMulti",
+        "_meta": {
+            "title": "WanVideo Lora Select"
+        }
+    },
+    "555": {
+        "inputs": {
+            "width": 512,
+            "height": 512,
+            "num_frames": 81
+        },
+        "class_type": "WanVideoEmptyEmbeds",
+        "_meta": {
+            "title": "WanVideo Empty Embeds"
+        }
+    }
+}

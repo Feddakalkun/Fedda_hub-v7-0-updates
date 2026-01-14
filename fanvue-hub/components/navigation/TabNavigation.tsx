@@ -13,6 +13,7 @@ interface Tab {
 const tabs: Tab[] = [
     { name: 'My Characters', path: '/characters', icon: '👥' },
     { name: 'Prompt Studio', path: '/ltx', icon: '🎨' },
+    { name: 'Video Studio', path: '/tools/workflow-chain', icon: '🎬' },
     { name: 'Phone', path: '/phone', icon: '📱' },
     { name: 'Settings', path: '/settings', icon: '⚙️' },
 ];

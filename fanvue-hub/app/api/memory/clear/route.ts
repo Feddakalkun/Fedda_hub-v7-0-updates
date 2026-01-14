@@ -7,19 +7,19 @@ export async function POST(req: NextRequest) {
 
         if (!characterId) return NextResponse.json({ error: 'Missing characterId' }, { status: 400 });
 
-        console.log(`[Memory] Clearing memories for Char ${characterId}`);
+        console.log(`[Memory] 🧹 Clearing ALL memories for Character: ${characterId}, User: ${userId}`);
 
-        // @ts-ignore
-        if (prisma.characterMemory) {
-            // @ts-ignore
-            await prisma.characterMemory.deleteMany({
-                where: { characterId, userId }
-            });
-        }
+        // Use raw SQL with correct table name (character_memories, not CharacterMemory)
+        const result = await (prisma as any).$executeRaw`
+            DELETE FROM character_memories 
+            WHERE characterId = ${characterId} AND userId = ${userId}
+        `;
 
-        return NextResponse.json({ success: true });
+        console.log(`[Memory] ✅ Deleted ${result} memory records`);
+
+        return NextResponse.json({ success: true, deletedCount: result });
     } catch (e: any) {
-        console.error("Clear Memory Failed:", e);
+        console.error("[Memory] Clear Failed:", e);
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

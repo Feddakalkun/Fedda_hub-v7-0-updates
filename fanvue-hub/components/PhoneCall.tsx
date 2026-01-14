@@ -25,10 +25,20 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
     const [duration, setDuration] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
     const [isSpeaker, setIsSpeaker] = useState(true); // Default to speaker on
+    const [language, setLanguage] = useState<'en-US' | 'nb-NO'>('en-US'); // Default to English
     const [error, setError] = useState<string | null>(null);
 
     // ✅ CRITICAL FIX: Use ref instead of state to avoid stale closures
     const conversationHistoryRef = useRef<Array<{ role: 'user' | 'assistant', content: string }>>([]);
+    const [transcripts, setTranscripts] = useState<Array<{ role: 'user' | 'assistant', content: string }>>([]);
+    const [showTranscripts, setShowTranscripts] = useState(false);
+
+    // Sync ref to transcripts for UI
+    const addMessageToHistory = (role: 'user' | 'assistant', content: string) => {
+        const newMsg = { role, content };
+        conversationHistoryRef.current = [...conversationHistoryRef.current, newMsg];
+        setTranscripts(prev => [...prev, newMsg]);
+    };
 
     // Audio handling
     const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -43,20 +53,9 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
         const timer = setTimeout(() => {
             setCallStatus('connected');
 
-            // 🎲 Random greeting variety
-            const greetings = [
-                `Hey! It's ${character.name}. What's up?`,
-                `${character.name} here... everything okay?`,
-                `Yo! Didn't expect you to call. What's going on?`,
-                `Hey babe, it's ${character.name}. Miss me already?`,
-                `${character.name} speaking... who's this?`,
-                `Oh hey! Perfect timing, I was just thinking about you.`,
-                `Heyyy, it's me! What are you up to?`,
-                `${character.name} here. Talk to me!`
-            ];
-
-            const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
-            handleAIResponse(randomGreeting);
+            // Simple, open greeting - let the user drive the dynamic
+            const greeting = `Hey... mmm... it's ${character.name}. What do you want?`;
+            handleAIResponse(greeting);
         }, 2000);
         return () => clearTimeout(timer);
     }, []);
@@ -80,7 +79,9 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
             const recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'en-US';
+            recognition.lang = language; // Use selected language
+
+            console.log(`[PhoneCall] 🎤 Speech Recognition Language: ${language}`);
 
             recognition.onstart = () => {
                 addLog("Mic: Active");
@@ -138,7 +139,7 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
         } else {
             setError("Voice input not supported");
         }
-    }, [isMuted]); // Re-bind if mute changes? No, better keep ref.
+    }, [isMuted, language]); // Re-bind if mute or language changes
 
     // Manage Mic State based on Call Status
     useEffect(() => {
@@ -220,27 +221,46 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
                     addLog('Cmd: Image Gen');
                     console.log('[PhoneCall] 📸 Image request detected:', command.prompt);
 
-                    // Trigger image generation
+                    // Build Flux-optimized prompt
                     try {
-                        const imgRes = await fetch('/api/comfyui/generate', {
+                        const fluxRes = await fetch('/api/flux/prompt', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 characterSlug: character.slug,
-                                prompt: command.prompt,
-                                numImages: 1
+                                userPrompt: command.prompt
                             })
                         });
 
-                        const imgData = await imgRes.json();
-                        if (imgData.success) {
-                            // AI acknowledges and confirms
-                            responseText = `Mmm... [giggles] generating that for you right now, babe. Give me a sec...`;
-                            addLog('Img: Generating...');
+                        const fluxData = await fluxRes.json();
+
+                        if (fluxData.success) {
+                            console.log('[PhoneCall] 🎨 Flux Prompt Built:', fluxData.prompt.substring(0, 100));
+
+                            // Trigger Z-Image workflow
+                            const imgRes = await fetch('/api/comfyui/generate', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    characterSlug: character.slug,
+                                    prompt: fluxData.prompt,
+                                    negativePrompt: fluxData.negativePrompt,
+                                    numImages: 1,
+                                    workflow: 'z-image' // Use your existing Z-Image workflow
+                                })
+                            });
+
+                            const imgData = await imgRes.json();
+                            if (imgData.success) {
+                                responseText = `Mmm... hehe... taking that photo for you right now, babe. Give me like... 15 seconds.`;
+                                addLog('Img: Z-Image Queued');
+                            } else {
+                                responseText = "Ahh... my camera's being weird. Let me try again in a sec... hehe.";
+                            }
                         }
                     } catch (imgErr) {
                         console.error('[PhoneCall] Image gen failed:', imgErr);
-                        responseText = "I tried to send you something sexy but my camera's acting up... [giggles] we can keep talking though.";
+                        responseText = "I tried to send you something sexy but my camera froze... mmm... we can keep talking though.";
                     }
 
                     // Skip normal AI response
@@ -284,6 +304,10 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
                 console.log(`[PhoneCall] 💬 Sending ${messagesToSend.length} messages to AI (including ${conversationHistoryRef.current.length} history)`);
                 addLog(`Hist: ${conversationHistoryRef.current.length} msgs`);
 
+                const languageInstruction = language === 'nb-NO'
+                    ? '\n\n[LANGUAGE: NORWEGIAN]\nYou MUST respond in Norwegian (Norsk). The user is speaking Norwegian to you.'
+                    : '';
+
                 const chatRes = await fetch('/api/ollama/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -294,34 +318,28 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
                         model: aiModel,
                         messages: messagesToSend,  // ✅ Send full history
                         systemPrompt: character.bio,
-                        systemInstruction: character.bio,  // ✅ ADDED: More context
+                        systemInstruction: (character.bio || '') + languageInstruction,  // ✅ Add language instruction
                         nsfwEnabled: true
                     })
                 });
 
                 const chatData = await chatRes.json();
-                if (!chatData.success) {
-                    console.warn("Chat failed, fallback echo");
-                    responseText = "I'm having trouble connecting to my brain right now.";
-                    addLog("Error: AI Failed");
-                } else {
-                    responseText = chatData.message;
+                if (chatData.reply) {
+                    responseText = chatData.reply;
 
                     // ✅ SAVE to history
                     console.log('[PhoneCall] 💾 Saving to history: user + assistant');
-                    conversationHistoryRef.current = [
-                        ...conversationHistoryRef.current,
-                        { role: 'user' as const, content: inputText },
-                        { role: 'assistant' as const, content: responseText }
-                    ];
+                    addMessageToHistory('user', inputText);
+                    addMessageToHistory('assistant', responseText);
                     console.log('[PhoneCall] 💾 New history length:', conversationHistoryRef.current.length);
+                } else {
+                    console.warn("Chat failed:", chatData.error || 'Unknown error');
+                    responseText = "I'm having trouble connecting to my brain right now.";
+                    addLog(`Error: ${chatData.error || 'AI Failed'}`);
                 }
             } else {
                 // Not a user message (e.g., initial greeting) - still save to history
-                conversationHistoryRef.current = [
-                    ...conversationHistoryRef.current,
-                    { role: 'assistant' as const, content: responseText }
-                ];
+                addMessageToHistory('assistant', responseText);
                 console.log('[PhoneCall] 💾 Saved greeting to history, length:', conversationHistoryRef.current.length);
             }
 
@@ -378,10 +396,28 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
 
         } catch (error: any) {
             addLog(`Err: ${error.message}`);
-            // Browser Fallback
+            // 🎙️ Browser Fallback (Improved)
             if (window.speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(responseText);
-                utterance.onend = () => setCallStatus('listening');
+
+                // Try to find a better voice (female)
+                const voices = window.speechSynthesis.getVoices();
+                const femaleNames = ['female', 'zira', 'amy', 'jenny', 'aria', 'sara', 'michelle', 'google us english'];
+                const femaleVoice = voices.find(v =>
+                    femaleNames.some(name => v.name.toLowerCase().includes(name)) &&
+                    v.lang.startsWith('en')
+                );
+
+                if (femaleVoice) utterance.voice = femaleVoice;
+
+                utterance.onend = () => {
+                    setTimeout(() => {
+                        setCallStatus('listening');
+                        if (recognitionRef.current && !isMuted) {
+                            try { recognitionRef.current.start(); } catch { }
+                        }
+                    }, 1000);
+                };
                 window.speechSynthesis.speak(utterance);
             } else {
                 setCallStatus('listening');
@@ -403,6 +439,45 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
             <div style={{ position: 'absolute', top: 10, left: 10, width: '200px', fontSize: '10px', color: '#aaa', background: 'rgba(0,0,0,0.5)', padding: '8px', zIndex: 10, borderRadius: '4px', pointerEvents: 'none' }}>
                 <div>Status: {callStatus}</div>
                 {debugLog.map((l, i) => <div key={i}>{l}</div>)}
+            </div>
+
+            {/* Transcript Side Panel (Sliding) */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                right: showTranscripts ? 0 : '-300px',
+                width: '300px',
+                height: '100%',
+                background: 'rgba(0,0,0,0.85)',
+                backdropFilter: 'blur(20px)',
+                zIndex: 100,
+                transition: 'right 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                borderLeft: '1px solid rgba(255,255,255,0.1)'
+            }}>
+                <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, fontSize: '18px' }}>Log</h3>
+                    <button onClick={() => setShowTranscripts(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer' }}>×</button>
+                </div>
+                <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {transcripts.map((msg, i) => (
+                        <div key={i} style={{
+                            alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                            maxWidth: '90%',
+                            background: msg.role === 'user' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+                            padding: '10px 14px',
+                            borderRadius: '12px',
+                            fontSize: '14px',
+                            lineHeight: '1.4',
+                            color: msg.role === 'user' ? '#eee' : '#fff'
+                        }}>
+                            <div style={{ fontSize: '10px', opacity: 0.5, marginBottom: '4px' }}>{msg.role === 'user' ? 'You' : character.name}</div>
+                            {msg.content}
+                        </div>
+                    ))}
+                    <div id="transcript-end" />
+                </div>
             </div>
 
             {/* Background Blur */}
@@ -475,7 +550,6 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
                             {isSpeaker ? '🔊' : '🔈'}
                         </button>
 
-                        {/* Force Listen Button (Emergency) */}
                         <button
                             onClick={() => {
                                 // Manual re-trigger
@@ -492,6 +566,37 @@ export default function PhoneCall({ character, onHangup }: PhoneCallProps) {
                             }}
                         >
                             👂
+                        </button>
+
+                        {/* Language Toggle */}
+                        <button
+                            onClick={() => {
+                                const newLang = language === 'en-US' ? 'nb-NO' : 'en-US';
+                                setLanguage(newLang);
+                                addLog(`Lang: ${newLang === 'nb-NO' ? 'Norwegian' : 'English'}`);
+                                // useEffect will handle recreation automatically
+                            }}
+                            style={{
+                                width: '64px', height: '64px', borderRadius: '50%',
+                                background: language === 'nb-NO' ? 'white' : 'rgba(255,255,255,0.1)',
+                                border: 'none', color: language === 'nb-NO' ? 'black' : 'white',
+                                fontSize: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                        >
+                            {language === 'nb-NO' ? '🇳🇴' : '🇺🇸'}
+                        </button>
+
+                        {/* Transcript Toggle */}
+                        <button
+                            onClick={() => setShowTranscripts(!showTranscripts)}
+                            style={{
+                                width: '64px', height: '64px', borderRadius: '50%',
+                                background: showTranscripts ? 'white' : 'rgba(255,255,255,0.1)',
+                                border: 'none', color: showTranscripts ? 'black' : 'white',
+                                fontSize: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                        >
+                            💬
                         </button>
                     </div>
 

@@ -1,0 +1,30 @@
+// Quick summary for user:
+// ✅ Single "Generate" button that smartly adds to queue
+// ✅ Prompt clears after clicking Generate (ready for next prompt)
+// ✅ Images saved with their full prompts
+// ✅ Grid layout with smaller thumbnails (2 columns)
+// ✅ "Copy Prompt" button on each image
+
+// To complete the refactor:
+// 1. Change generatedImages.map to generatedImagesData.map
+// 2. Change imageUrl to imageData.url
+// 3. Add Copy Prompt button before other buttons
+// 4. Make thumbnails square with grid layout
+// 5. Condense button labels to icons
+
+/* Updated grid layout changes needed in ImageGenerator.tsx around line 1158:
+
+Change from:
+    <div style={{ display: 'grid', gap: '16px' }}>
+        {generatedImages.map((imageUrl, idx) => (
+
+To:
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        {generatedImagesData.map((imageData, idx) => (
+
+And update all references:
+- imageUrl → imageData.url  
+- Add aspectRatio: '1' and objectFit: 'cover' to img style
+- Add Copy Prompt button as first button
+- Condense button text to just emojis
+*/

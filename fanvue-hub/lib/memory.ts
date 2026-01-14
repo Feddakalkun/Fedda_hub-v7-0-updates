@@ -4,7 +4,7 @@ const OLLAMA_URL = 'http://127.0.0.1:11435';
 const EXTRACTION_MODEL = 'mistral';
 
 export interface ExtractedMemory {
-    type: 'name' | 'interest' | 'preference' | 'fact' | 'emotion';
+    type: 'persona_name' | 'sexual_dynamic' | 'nsfw_style' | 'hard_limits' | 'pleasure_points' | 'interest' | 'fact' | 'emotion';
     value: string;
     confidence: number;
 }
@@ -15,15 +15,20 @@ export async function extractMemoriesFromMessage(
 ): Promise<ExtractedMemory[]> {
 
     const systemPrompt = `You are a memory extraction system.
-  Task: Analyze the USER's message and extract key facts about them. 
-  Focus on: Names, Interests, Preferences (likes/dislikes), Personal Facts, and Emotional State.
-  Return ONLY a JSON array of objects. No markdown, no text.
+  Task: Analyze the USER's message and extract key facts about them for a permanent profile. 
   
-  Format: [{"type": "name|interest|preference|fact|emotion", "value": "extracted text", "confidence": 0-100}]
+  Focus on these CATEGORIES:
+  1. persona_name: What you should call the user (e.g. Master, John, Sir).
+  2. sexual_dynamic: Their role/preference (e.g. Dominant, Submissive, Owner, Switch).
+  3. nsfw_style: How they like descriptions (e.g. Raw/Dirty, Romantic, Soft, Explicit).
+  4. hard_limits: Things they HATE or never want to happen.
+  5. pleasure_points: Things they LOVE or crave (e.g. hair pulling, being called x).
+  6. interest: General non-sexual hobbies.
+  7. fact: Other personal info (job, location, etc).
+  8. emotion: How they are feeling right now.
 
-  Example:
-  User: "My name is John and I love skiing"
-  Result: [{"type": "name", "value": "John", "confidence": 100}, {"type": "interest", "value": "skiing", "confidence": 90}]
+  Return ONLY a JSON array of objects. No markdown, no text.
+  Format: [{"type": "category", "value": "extracted text", "confidence": 0-100}]
   
   Only return facts with >50 confidence. If nothing relevant, return [].`;
 
@@ -68,11 +73,11 @@ export async function extractMemoriesFromMessage(
             const match = message.match(pattern);
             if (match && match[1]) {
                 regexMemories.push({
-                    type: 'name',
+                    type: 'persona_name',
                     value: match[1],
                     confidence: 80
                 });
-                console.log(`[Memory] 📝 Regex extracted name: ${match[1]}`);
+                console.log(`[Memory] 📝 Regex extracted persona_name: ${match[1]}`);
                 break; // Only one name
             }
         }
@@ -151,13 +156,13 @@ export async function saveMemories(
 
     for (const memory of memories) {
         try {
-            // Conflict Resolution: If type is 'name', ensure unique (User only has one name)
-            if (memory.type === 'name') {
+            // Conflict Resolution: If type is 'persona_name', ensure unique (User only has one name)
+            if (memory.type === 'persona_name') {
                 await prisma.characterMemory.deleteMany({
                     where: {
                         characterId,
                         userId,
-                        memoryType: 'name',
+                        memoryType: 'persona_name',
                         memoryContent: { not: memory.value }
                     }
                 });
@@ -231,8 +236,22 @@ export async function loadCharacterMemories(characterId: string, userId: string)
 
 export function formatMemoriesForPrompt(memories: ExtractedMemory[]): string {
     if (memories.length === 0) return '';
-    const unique = Array.from(new Set(memories.map(m => `${m.type}: ${m.value}`)));
-    return `\n\n[INTERNAL MEMORY - DO NOT SPEAK THIS OUT LOUD]\nWhat you know about this user:\n${unique.join('\n')}\n[USE THIS INFO NATURALLY IN CONVERSATION - DON'T RECITE IT]`;
+
+    const naturalLabels: Record<string, string> = {
+        persona_name: "They want to be called",
+        sexual_dynamic: "The sexual dynamic is",
+        nsfw_style: "Their preferred NSFw style is",
+        hard_limits: "They have a HARD LIMIT for",
+        pleasure_points: "They specifically love",
+        interest: "They are interested in",
+        fact: "You know this about them",
+        emotion: "They are currently feeling"
+    };
+
+    const lines = memories.map(m => `- ${naturalLabels[m.type] || m.type}: ${m.value}`);
+    const unique = Array.from(new Set(lines));
+
+    return `\n\n[PROFILE DATA: For internal context only. NEVER recite these bullet points.]\n${unique.join('\n')}\n[Always react to this data as if you've ALWAYS known it. Use their name/title frequently.]`;
 }
 
 export async function applyMemoryDecay(characterId: string, userId: string) {

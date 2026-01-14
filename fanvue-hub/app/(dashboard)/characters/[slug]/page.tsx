@@ -198,11 +198,11 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
         }
     };
 
-    if (loading) return <div style={{ padding: '40px' }}>Loading Data...</div>;
-    if (!character) return <div>Not Found</div>;
+    if (loading) return <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>Loading...</div>;
+    if (!character) return <div style={{ padding: '40px', color: '#666' }}>Not Found</div>;
 
     return (
-        <div style={{ padding: '40px', maxWidth: '1600px', margin: '0 auto' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
             {/* Fullscreen Image Preview */}
             {isImagePreviewOpen && character.avatarUrl && (
@@ -224,7 +224,7 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                 maxWidth: '100%',
                                 maxHeight: '90vh',
                                 objectFit: 'contain',
-                                borderRadius: '8px',
+                                borderRadius: '2px',
                                 boxShadow: '0 20px 60px rgba(0,0,0,0.8)'
                             }}
                             onClick={(e) => e.stopPropagation()}
@@ -240,13 +240,14 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                 border: '1px solid rgba(255,255,255,0.2)',
                                 color: 'white',
                                 padding: '8px 16px',
-                                borderRadius: '8px',
+                                borderRadius: '2px',
                                 cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '600'
+                                fontSize: '12px',
+                                fontWeight: '400',
+                                letterSpacing: '0.05em'
                             }}
                         >
-                            ✕ Close
+                            ✕ CLOSE
                         </button>
                     </div>
                 </div>
@@ -260,21 +261,21 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
                     <div style={{
-                        background: '#1a1a1a', padding: '32px', borderRadius: '16px',
+                        background: '#1a1a1a', padding: '32px', borderRadius: '2px',
                         width: '90%', maxWidth: '500px', border: '1px solid rgba(255,255,255,0.1)'
                     }}>
-                        <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Update Profile Picture</h3>
+                        <h3 style={{ fontSize: '18px', fontWeight: '400', marginBottom: '16px', letterSpacing: '0.03em' }}>Update Profile Picture</h3>
 
                         <div style={{ marginBottom: '24px' }}>
-                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#ccc' }}>Image URL</label>
+                            <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Image URL</label>
                             <input
                                 value={uploadUrl}
                                 onChange={e => setUploadUrl(e.target.value)}
                                 placeholder="https://..."
-                                style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
                                 disabled={progressState.status !== 'idle'}
                             />
-                            <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+                            <p style={{ fontSize: '11px', color: '#555', marginTop: '8px' }}>
                                 Paste a URL from your Content Library or generate one with AI.
                             </p>
                         </div>
@@ -283,28 +284,25 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                         {progressState.status !== 'idle' && (
                             <div style={{ marginBottom: '24px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <span style={{ fontSize: '13px', color: '#a78bfa', fontWeight: '600' }}>
+                                    <span style={{ fontSize: '11px', color: '#aaa', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                                         {progressState.message}
                                     </span>
-                                    <span style={{ fontSize: '12px', color: '#888' }}>
+                                    <span style={{ fontSize: '11px', color: '#666' }}>
                                         {Math.round(progressState.progress)}%
                                     </span>
                                 </div>
                                 {/* Progress Bar */}
                                 <div style={{
                                     width: '100%',
-                                    height: '8px',
+                                    height: '2px',
                                     background: '#222',
-                                    borderRadius: '4px',
-                                    overflow: 'hidden',
-                                    border: '1px solid #333'
+                                    overflow: 'hidden'
                                 }}>
                                     <div style={{
                                         width: `${progressState.progress}%`,
                                         height: '100%',
-                                        background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
-                                        transition: 'width 0.3s ease',
-                                        boxShadow: progressState.progress > 0 ? '0 0 10px rgba(102, 126, 234, 0.5)' : 'none'
+                                        background: '#fff',
+                                        transition: 'width 0.3s ease'
                                     }} />
                                 </div>
                             </div>
@@ -315,24 +313,26 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                 onClick={handleGenerateAvatar}
                                 disabled={progressState.status !== 'idle'}
                                 style={{
-                                    padding: '8px 20px',
-                                    background: progressState.status !== 'idle' ? '#444' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '8px',
+                                    padding: '10px 16px',
+                                    background: progressState.status !== 'idle' ? '#222' : 'rgba(255,255,255,0.05)',
+                                    color: progressState.status !== 'idle' ? '#666' : '#fff',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '2px',
                                     cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
-                                    fontWeight: '600',
-                                    opacity: progressState.status !== 'idle' ? 0.6 : 1
+                                    fontWeight: '400',
+                                    fontSize: '12px',
+                                    letterSpacing: '0.05em',
+                                    opacity: progressState.status !== 'idle' ? 0.5 : 1
                                 }}
                             >
-                                {progressState.status !== 'idle' ? '🎨 Generating...' : '✨ Generate with AI'}
+                                {progressState.status !== 'idle' ? 'Generating...' : 'Generate with AI'}
                             </button>
 
                             <div style={{ display: 'flex', gap: '12px' }}>
                                 <button
                                     onClick={() => setIsAvatarModalOpen(false)}
                                     disabled={progressState.status !== 'idle'}
-                                    style={{ padding: '8px 16px', background: 'transparent', color: '#ccc', border: 'none', cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer' }}
+                                    style={{ padding: '10px 16px', background: 'transparent', color: '#666', border: 'none', cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer', fontSize: '12px', letterSpacing: '0.05em' }}
                                 >
                                     Cancel
                                 </button>
@@ -340,15 +340,18 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                     onClick={handleAvatarUpdate}
                                     disabled={progressState.status !== 'idle'}
                                     style={{
-                                        padding: '8px 24px',
-                                        background: progressState.status !== 'idle' ? '#444' : '#6366f1',
-                                        color: 'white',
+                                        padding: '10px 20px',
+                                        background: progressState.status !== 'idle' ? '#222' : '#fff',
+                                        color: progressState.status !== 'idle' ? '#666' : '#000',
                                         border: 'none',
-                                        borderRadius: '8px',
-                                        cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer'
+                                        borderRadius: '2px',
+                                        cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
+                                        fontSize: '12px',
+                                        fontWeight: '500',
+                                        letterSpacing: '0.05em'
                                     }}
                                 >
-                                    Save URL
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -356,135 +359,144 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                 </div>
             )}
 
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '32px', paddingBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                {/* Avatar with Preview/Edit */}
-                <div
-                    style={{
-                        position: 'relative',
-                        width: '80px', height: '80px', borderRadius: '50%',
-                        background: '#222', border: '1px solid #333',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '32px', overflow: 'hidden', cursor: 'pointer',
-                    }}
-                    onMouseEnter={e => {
-                        const overlay = e.currentTarget.querySelector('.avatar-overlay');
-                        if (overlay) (overlay as HTMLElement).style.opacity = '1';
-                    }}
-                    onMouseLeave={e => {
-                        const overlay = e.currentTarget.querySelector('.avatar-overlay');
-                        if (overlay) (overlay as HTMLElement).style.opacity = '0';
-                    }}
-                >
-                    {character.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                            src={character.avatarUrl}
-                            alt={character.name}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onClick={() => setIsImagePreviewOpen(true)}
-                        />
-                    ) : (
-                        <span onClick={() => setIsAvatarModalOpen(true)}>{character.name.charAt(0)}</span>
-                    )}
-
-                    {/* View/Edit Overlay */}
-                    <div className="avatar-overlay" style={{
-                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                        background: 'rgba(0,0,0,0.6)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        opacity: 0, transition: 'opacity 0.2s',
-                        color: 'white', fontWeight: 'bold', fontSize: '10px',
-                        gap: '4px'
-                    }}>
-                        {character.avatarUrl && (
-                            <div
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsImagePreviewOpen(true);
-                                }}
-                                style={{
-                                    padding: '4px 8px',
-                                    cursor: 'pointer',
-                                    pointerEvents: 'all'
-                                }}
-                            >
-                                👁️ VIEW
-                            </div>
+            {/* Header - Full Width */}
+            <div style={{
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                padding: '24px 40px',
+                background: '#000'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    {/* Avatar */}
+                    <div
+                        style={{
+                            position: 'relative',
+                            width: '56px', height: '56px', borderRadius: '2px',
+                            background: '#111', border: '1px solid rgba(255,255,255,0.08)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '24px', overflow: 'hidden', cursor: 'pointer',
+                        }}
+                        onMouseEnter={e => {
+                            const overlay = e.currentTarget.querySelector('.avatar-overlay');
+                            if (overlay) (overlay as HTMLElement).style.opacity = '1';
+                        }}
+                        onMouseLeave={e => {
+                            const overlay = e.currentTarget.querySelector('.avatar-overlay');
+                            if (overlay) (overlay as HTMLElement).style.opacity = '0';
+                        }}
+                    >
+                        {character.avatarUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={character.avatarUrl}
+                                alt={character.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onClick={() => setIsImagePreviewOpen(true)}
+                            />
+                        ) : (
+                            <span onClick={() => setIsAvatarModalOpen(true)} style={{ fontWeight: '300', color: 'rgba(255,255,255,0.3)' }}>{character.name.charAt(0)}</span>
                         )}
-                        <div
+
+                        {/* Edit Overlay */}
+                        <div className="avatar-overlay" style={{
+                            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                            background: 'rgba(0,0,0,0.8)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: 0, transition: 'opacity 0.2s',
+                            color: 'white', fontWeight: '400', fontSize: '9px',
+                            letterSpacing: '0.1em',
+                            cursor: 'pointer'
+                        }}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setIsAvatarModalOpen(true);
                             }}
-                            style={{
-                                padding: '4px 8px',
-                                cursor: 'pointer',
-                                pointerEvents: 'all'
-                            }}
                         >
-                            ✏️ EDIT
+                            EDIT
                         </div>
                     </div>
-                </div>
 
-                <div style={{ flex: 1 }}>
-                    <h1 style={{ fontSize: '32px', fontWeight: 'bold' }}>{character.name}</h1>
-                    <div style={{ fontSize: '14px', color: '#888', display: 'flex', gap: '12px', marginTop: '4px' }}>
-                        <span>{character.handle}</span>
-                        <span>•</span>
-                        <span>{character.bio || 'No bio set'}</span>
-                    </div>
-                </div>
-                <div>
-                    {character.isConnected ? (
-                        <div style={{
-                            padding: '8px 16px',
-                            background: 'rgba(34, 197, 94, 0.15)',
-                            color: '#4ade80',
-                            borderRadius: '8px',
-                            border: '1px solid rgba(34, 197, 94, 0.3)',
-                            fontSize: '14px', fontWeight: '600'
-                        }}>
-                            ✓ Connected
+                    <div style={{ flex: 1 }}>
+                        <h1 style={{ fontSize: '20px', fontWeight: '400', letterSpacing: '0.02em', marginBottom: '4px' }}>{character.name}</h1>
+                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', display: 'flex', gap: '12px', letterSpacing: '0.03em' }}>
+                            <span>{character.handle}</span>
+                            {character.bio && (
+                                <>
+                                    <span>•</span>
+                                    <span>{character.bio}</span>
+                                </>
+                            )}
                         </div>
-                    ) : (
-                        <button
-                            onClick={handleConnect}
-                            style={{
-                                padding: '10px 20px',
-                                background: '#f87171',
-                                color: '#111',
-                                border: 'none',
-                                borderRadius: '8px',
-                                fontWeight: '600',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Connect Fanvue
-                        </button>
-                    )}
+                    </div>
+                    <div>
+                        {character.isConnected ? (
+                            <div style={{
+                                padding: '8px 16px',
+                                background: 'rgba(34, 197, 94, 0.1)',
+                                color: 'rgba(34, 197, 94, 0.8)',
+                                borderRadius: '2px',
+                                border: '1px solid rgba(34, 197, 94, 0.2)',
+                                fontSize: '11px',
+                                fontWeight: '400',
+                                letterSpacing: '0.05em',
+                                textTransform: 'uppercase'
+                            }}>
+                                Connected
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleConnect}
+                                style={{
+                                    padding: '8px 16px',
+                                    background: 'transparent',
+                                    color: '#fff',
+                                    border: '1px solid rgba(255,255,255,0.15)',
+                                    borderRadius: '2px',
+                                    fontWeight: '400',
+                                    fontSize: '11px',
+                                    letterSpacing: '0.05em',
+                                    textTransform: 'uppercase',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                                }}
+                            >
+                                Connect
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Global Navigation */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', background: 'rgba(255,255,255,0.05)', padding: '6px', borderRadius: '12px', width: 'fit-content', flexWrap: 'wrap' }}>
-                <button onClick={() => setActiveTab('image')} style={{ padding: '8px 20px', background: activeTab === 'image' ? '#6366f1' : 'transparent', color: activeTab === 'image' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>🎨 Text to Image</button>
-                <button onClick={() => setActiveTab('lipsync')} style={{ padding: '8px 20px', background: activeTab === 'lipsync' ? '#6366f1' : 'transparent', color: activeTab === 'lipsync' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>🎬 Lipsync</button>
-                <button onClick={() => setActiveTab('wan21')} style={{ padding: '8px 20px', background: activeTab === 'wan21' ? '#6366f1' : 'transparent', color: activeTab === 'wan21' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>🎥 Wan 2.1</button>
-                <button onClick={() => setActiveTab('qwen')} style={{ padding: '8px 20px', background: activeTab === 'qwen' ? '#8b5cf6' : 'transparent', color: activeTab === 'qwen' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>✨ Qwen Edit</button>
+            {/* Navigation - Full Width */}
+            <div style={{
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                padding: '0 40px',
+                background: '#000'
+            }}>
+                <div style={{ display: 'flex', gap: '0' }}>
+                    <button onClick={() => setActiveTab('image')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'image' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'image' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Image</button>
+                    <button onClick={() => setActiveTab('lipsync')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'lipsync' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'lipsync' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Lipsync</button>
+                    <button onClick={() => setActiveTab('wan21')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'wan21' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'wan21' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Wan 2.1</button>
+                    <button onClick={() => setActiveTab('qwen')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'qwen' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'qwen' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Qwen</button>
 
-                <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)', margin: '0 12px' }} />
+                    <div style={{ width: '40px' }} />
 
-                <button onClick={() => setActiveTab('library')} style={{ padding: '8px 20px', background: activeTab === 'library' ? 'rgba(255,255,255,0.1)' : 'transparent', color: activeTab === 'library' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>📚 Library</button>
-                <button onClick={() => setActiveTab('settings')} style={{ padding: '8px 20px', background: activeTab === 'settings' ? 'rgba(255,255,255,0.1)' : 'transparent', color: activeTab === 'settings' ? 'white' : '#aaa', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>⚙️ Settings</button>
+                    <button onClick={() => setActiveTab('library')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'library' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'library' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Library</button>
+                    <button onClick={() => setActiveTab('settings')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'settings' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'settings' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Settings</button>
+                </div>
             </div>
 
-            {/* Content Area */}
-            <div style={{ minHeight: '400px' }}>
+            {/* Content Area - Full Width */}
+            <div style={{ flex: 1, padding: '40px', background: '#000' }}>
 
                 {activeTab === 'image' && (
                     <ImageGenerator
@@ -761,14 +773,14 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                 {/* Uberduck Voice Settings */}
                                 {editForm.voiceProvider === 'uberduck' && (
                                     <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Uberduck Voice Model (UUID)</label>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Uberduck Voice Model (Slug or UUID)</label>
                                         <input
-                                            value={editForm.voiceModel || 'voice_en_female_03'}
-                                            onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
-                                            placeholder="Voice UUID"
+                                            value={editForm.voiceId || ''}
+                                            onChange={e => setEditForm({ ...editForm, voiceId: e.target.value })}
+                                            placeholder="e.g. polly_salli or a UUID"
                                             style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                                         />
-                                        <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Find UUIDs at uberduck.ai/browse/voicemodel</p>
+                                        <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Examples: polly_salli, voice_en_female_01. Find more at app.uberduck.ai/voices</p>
                                     </div>
                                 )}
 

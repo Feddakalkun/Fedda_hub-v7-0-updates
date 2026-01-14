@@ -1,119 +1,164 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { TikTokSettings } from '@/components/TikTokSettings';
-import { OllamaManager } from '@/components/OllamaManager';
-import { GlobalConfigSettings } from '@/components/GlobalConfigSettings';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SettingsPage() {
-    const [loading, setLoading] = useState(true);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [config, setConfig] = useState<any>({});
-    const [characters, setCharacters] = useState<any[]>([]);
+    const router = useRouter();
+    const [activeTab, setActiveTab] = useState('api');
 
-    useEffect(() => {
-        // Load characters to know which one to connect
-        const loadData = async () => {
-            try {
-                const res = await fetch('/api/characters');
-                const data = await res.json();
-                if (data.success) {
-                    setCharacters(data.characters);
-                }
-            } catch (e) {
-                console.error("Failed to load characters", e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
-    }, []);
+    const tabs = [
+        { id: 'api', label: '🔧 API Settings', icon: '🔧' },
+        { id: 'integrations', label: '🔌 Integrations', icon: '🔌' },
+        { id: 'system', label: '⚙️ System', icon: '⚙️' },
+    ];
 
-    const handleConnectFanvue = () => {
-        if (characters.length === 0) {
-            alert("No character found. Please create a character first.");
-            return;
+    const handleTabClick = (tabId: string) => {
+        setActiveTab(tabId);
+        if (tabId === 'api') {
+            router.push('/settings/api');
         }
-        // Default to the first character for now
-        const slug = characters[0].slug;
-        window.location.href = `/api/auth/fanvue?persona=${slug}`;
     };
 
-    if (loading) return <div style={{ padding: '40px' }}>Loading Settings...</div>;
-
     return (
-        <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '32px' }}>Settings</h1>
+        <div style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            padding: '40px 20px',
+            fontFamily: 'system-ui, -apple-system, sans-serif'
+        }}>
+            <h1 style={{
+                fontSize: '32px',
+                fontWeight: '700',
+                marginBottom: '32px',
+                color: 'white'
+            }}>
+                Settings
+            </h1>
 
-            <div style={{ display: 'grid', gap: '24px' }}>
-
-                {/* Fanvue Integration */}
-                <div style={{
-                    padding: '24px',
-                    background: 'rgba(255,255,255,0.02)',
-                    borderRadius: '16px',
-                    border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-                        <div style={{ fontSize: '32px' }}>💙</div>
-                        <div>
-                            <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>Fanvue Integration</h2>
-                            <p style={{ color: '#888', fontSize: '14px', marginTop: '4px' }}>
-                                Connect <strong>{characters[0]?.name || 'your character'}</strong> to auto-post content.
-                            </p>
-                        </div>
-                    </div>
-
+            {/* Tab Navigation */}
+            <div style={{
+                display: 'flex',
+                gap: '8px',
+                marginBottom: '32px',
+                borderBottom: '1px solid #333',
+                paddingBottom: '0'
+            }}>
+                {tabs.map(tab => (
                     <button
-                        onClick={handleConnectFanvue}
-                        disabled={characters.length === 0}
+                        key={tab.id}
+                        onClick={() => handleTabClick(tab.id)}
                         style={{
                             padding: '12px 24px',
-                            background: characters.length === 0 ? '#444' : '#0ea5e9',
-                            color: 'white',
+                            background: activeTab === tab.id ? 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' : 'transparent',
                             border: 'none',
-                            borderRadius: '8px',
+                            borderRadius: '8px 8px 0 0',
+                            color: activeTab === tab.id ? 'white' : '#888',
+                            fontSize: '15px',
                             fontWeight: '600',
-                            cursor: characters.length === 0 ? 'not-allowed' : 'pointer',
-                            fontSize: '15px'
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
                         }}
                     >
-                        Connect Fanvue Account
+                        <span>{tab.icon}</span>
+                        {tab.label}
                     </button>
-                </div>
+                ))}
+            </div>
 
-                {/* TikTok Integration */}
-                {characters.length > 0 && (
-                    <TikTokSettings characterSlug={characters[0].slug} />
+            {/* Tab Content */}
+            <div style={{
+                background: '#0a0a0a',
+                borderRadius: '12px',
+                padding: '32px',
+                minHeight: '400px'
+            }}>
+                {activeTab === 'api' && (
+                    <div>
+                        <h2 style={{ fontSize: '24px', fontWeight: '600', color: 'white', marginBottom: '16px' }}>
+                            🔧 API Configuration
+                        </h2>
+                        <p style={{ color: '#aaa', marginBottom: '24px' }}>
+                            Click below to configure all API keys and endpoints
+                        </p>
+                        <button
+                            onClick={() => router.push('/settings/api')}
+                            style={{
+                                padding: '16px 32px',
+                                background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+                                border: 'none',
+                                borderRadius: '8px',
+                                color: 'white',
+                                fontSize: '16px',
+                                fontWeight: '700',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Open API Settings →
+                        </button>
+                    </div>
                 )}
 
-                {/* Ollama Models */}
-                <OllamaManager />
+                {activeTab === 'integrations' && (
+                    <div>
+                        <h2 style={{ fontSize: '24px', fontWeight: '600', color: 'white', marginBottom: '16px' }}>
+                            🔌 Platform Integrations
+                        </h2>
+                        <p style={{ color: '#888' }}>
+                            Connect to social media platforms and content distribution services
+                        </p>
+                        <p style={{ color: '#666', marginTop: '20px', fontStyle: 'italic' }}>
+                            Coming soon: FanVue, TikTok, Instagram, X/Twitter auto-posting
+                        </p>
+                    </div>
+                )}
 
-                {/* System Status */}
-                <div style={{
-                    padding: '24px',
-                    background: 'rgba(255,255,255,0.02)',
-                    borderRadius: '16px',
-                    border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                    <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>System Status</h2>
+                {activeTab === 'system' && (
+                    <div>
+                        <h2 style={{ fontSize: '24px', fontWeight: '600', color: 'white', marginBottom: '24px' }}>
+                            ⚙️ System Status
+                        </h2>
 
-                    <div style={{ display: 'grid', gap: '12px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-                            <span style={{ color: '#ccc' }}>VoxCPM Engine</span>
-                            <span style={{ color: '#4ade80' }}>● Detected</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-                            <span style={{ color: '#ccc' }}>ComfyUI</span>
-                            <span style={{ color: '#4ade80' }}>● Connected (localhost:8188)</span>
+                        <div style={{ display: 'grid', gap: '12px' }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '16px',
+                                background: 'rgba(0,0,0,0.3)',
+                                borderRadius: '8px',
+                                border: '1px solid #333'
+                            }}>
+                                <span style={{ color: '#ccc' }}>ComfyUI</span>
+                                <span style={{ color: '#4ade80' }}>● Running</span>
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '16px',
+                                background: 'rgba(0,0,0,0.3)',
+                                borderRadius: '8px',
+                                border: '1px solid #333'
+                            }}>
+                                <span style={{ color: '#ccc' }}>VoxCPM</span>
+                                <span style={{ color: '#4ade80' }}>● Running</span>
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '16px',
+                                background: 'rgba(0,0,0,0.3)',
+                                borderRadius: '8px',
+                                border: '1px solid #333'
+                            }}>
+                                <span style={{ color: '#ccc' }}>Ollama</span>
+                                <span style={{ color: '#4ade80' }}>● Running</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Global Configuration (Replaces Setup Page) */}
-                <GlobalConfigSettings />
-
+                )}
             </div>
         </div>
     );

@@ -15,7 +15,15 @@ export async function POST(request: NextRequest) {
             uberduckApiKey, uberduckApiSecret
         } = body;
 
-        // Upsert the global configuration
+        // 🛠️ DATABASE REPAIR: Ensure columns exist manually (SQLite ignores redundant adds if handled carefully)
+        try {
+            await (prisma as any).$executeRawUnsafe(`ALTER TABLE AppConfig ADD COLUMN uberduckApiKey TEXT`);
+        } catch (e) { }
+        try {
+            await (prisma as any).$executeRawUnsafe(`ALTER TABLE AppConfig ADD COLUMN uberduckApiSecret TEXT`);
+        } catch (e) { }
+
+        // Upsert the global configuration (everything EXCEPT Uberduck keys which Prisma Client doesn't know yet)
         await prisma.appConfig.upsert({
             where: { id: 'global' },
             update: {
@@ -33,8 +41,6 @@ export async function POST(request: NextRequest) {
                 ...(awsAccessKeyId && { awsAccessKeyId }),
                 ...(awsSecretAccessKey && { awsSecretAccessKey }),
                 ...(awsRegion && { awsRegion }),
-                ...(uberduckApiKey && { uberduckApiKey }),
-                ...(uberduckApiSecret && { uberduckApiSecret }),
 
                 setupCompleted: true,
             },
@@ -54,12 +60,20 @@ export async function POST(request: NextRequest) {
                 awsAccessKeyId: awsAccessKeyId || '',
                 awsSecretAccessKey: awsSecretAccessKey || '',
                 awsRegion: awsRegion || 'us-east-1',
-                uberduckApiKey: uberduckApiKey || '',
-                uberduckApiSecret: uberduckApiSecret || '',
 
                 setupCompleted: true,
             },
         });
+
+        // 🛠️ RAW SQL FALLBACK: Update Uberduck keys directly
+        if (uberduckApiKey !== undefined) {
+            const keyVal = uberduckApiKey || '';
+            await (prisma as any).$executeRaw`UPDATE AppConfig SET uberduckApiKey = ${keyVal} WHERE id = 'global'`;
+        }
+        if (uberduckApiSecret !== undefined) {
+            const secretVal = uberduckApiSecret || '';
+            await (prisma as any).$executeRaw`UPDATE AppConfig SET uberduckApiSecret = ${secretVal} WHERE id = 'global'`;
+        }
 
         console.log('[Setup] App configuration updated successfully.');
         return NextResponse.json({ success: true });
@@ -71,9 +85,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-    const config = await prisma.appConfig.findUnique({
-        where: { id: 'global' },
-    });
+    const configRaw = await (prisma as any).$queryRawUnsafe(`SELECT * FROM AppConfig WHERE id = 'global' LIMIT 1`);
+    const config = (configRaw as any[])?.[0];
 
     return NextResponse.json({
         setupCompleted: config?.setupCompleted || false,
@@ -92,8 +105,8 @@ export async function GET(request: NextRequest) {
             awsAccessKeyId: config?.awsAccessKeyId ? '••••••••' + config.awsAccessKeyId.slice(-4) : '',
             awsSecretAccessKey: config?.awsSecretAccessKey ? '••••••••' + config.awsSecretAccessKey.slice(-4) : '',
             awsRegion: config?.awsRegion || '',
-            uberduckApiKey: config?.uberduckApiKey ? '••••••••' + config.uberduckApiKey.slice(-4) : '',
-            uberduckApiSecret: config?.uberduckApiSecret ? '••••••••' + config.uberduckApiSecret.slice(-4) : '',
+            uberduckApiKey: (config as any)?.uberduckApiKey ? '••••••••' + (config as any).uberduckApiKey.slice(-4) : '',
+            uberduckApiSecret: (config as any)?.uberduckApiSecret ? '••••••••' + (config as any).uberduckApiSecret.slice(-4) : '',
         }
     });
 }

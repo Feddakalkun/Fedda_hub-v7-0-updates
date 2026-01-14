@@ -647,6 +647,23 @@ export default function LipsyncGenerator({
                                         >
                                             {isPosting === video.url ? '⏳...' : '🚀 Post'}
                                         </button>
+                                        <button
+                                            onClick={() => {
+                                                window.location.href = '/tools/workflow-chain?addVideo=' + encodeURIComponent(video.url) + '&type=lipsync&text=' + encodeURIComponent(video.text);
+                                            }}
+                                            style={{
+                                                padding: '8px 12px',
+                                                background: '#8b5cf6',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '6px',
+                                                cursor: 'pointer',
+                                                fontSize: '13px',
+                                                fontWeight: '600'
+                                            }}
+                                        >
+                                            🎬 → Chain
+                                        </button>
                                         <a
                                             href={video.url}
                                             download

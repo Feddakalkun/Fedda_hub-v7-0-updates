@@ -173,7 +173,7 @@ export function GlobalConfigSettings() {
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: '#aaa' }}>Uberduck API Secret</label>
+                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: '#aaa' }}>Uberduck API Secret (Optional/Legacy)</label>
                             <input
                                 name="uberduckApiSecret" value={form.uberduckApiSecret} onChange={handleChange}
                                 type="password" placeholder="your-api-secret"

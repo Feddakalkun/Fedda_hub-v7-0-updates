@@ -111,20 +111,7 @@ export default function LandingPage() {
                     </h2>
                 </div>
 
-                {/* Subtitle / Slogan */}
-                <div style={{ position: 'relative', padding: '0 20px' }}>
-                    <p style={{
-                        fontSize: '16px',
-                        letterSpacing: '0.3em',
-                        color: '#f0f0f0',
-                        marginBottom: '8px',
-                        textTransform: 'uppercase',
-                        fontWeight: '600'
-                    }}>
-                        ONE UI TO RULE IT ALL
-                    </p>
-                    <div style={{ width: '100%', height: '2px', background: 'linear-gradient(90deg, transparent, #fff, transparent)', opacity: 0.5 }} />
-                </div>
+
 
                 {/* Status Indicator */}
                 {!comfyReady && (
@@ -211,10 +198,7 @@ export default function LandingPage() {
 
             </div>
 
-            {/* Footer */}
-            <div style={{ position: 'absolute', bottom: '32px', zIndex: 10, opacity: 0.4, fontSize: '10px', letterSpacing: '0.2em' }}>
-                AUTOMATED CONTENT GENERATION & SCHEDULING
-            </div>
+
 
         </main>
     );

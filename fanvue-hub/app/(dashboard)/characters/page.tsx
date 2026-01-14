@@ -109,33 +109,46 @@ export default function CharactersPage() {
         }
     };
 
-    if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading Empire...</div>;
+    if (loading) return <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>Loading...</div>;
 
     return (
-        <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+        <div style={{ padding: '60px 40px', maxWidth: '1400px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '48px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '24px' }}>
                 <div>
-                    <h1 style={{ fontSize: '32px', fontWeight: 'bold' }}>My Characters</h1>
-                    <p style={{ color: 'rgba(255,255,255,0.5)' }}>Manage your AI personas</p>
+                    <h1 style={{
+                        fontSize: '28px',
+                        fontWeight: '400',
+                        letterSpacing: '0.02em',
+                        marginBottom: '8px',
+                        color: '#fff'
+                    }}>Characters</h1>
+                    <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px', letterSpacing: '0.03em' }}>MANAGE AI PERSONAS</p>
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
-
-                    <button
-                        onClick={() => setIsCreating(true)}
-                        className="btn btn-primary"
-                        style={{
-                            padding: '12px 24px',
-                            background: '#6366f1',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: '600'
-                        }}
-                    >
-                        + New Character
-                    </button>
-                </div>
+                <button
+                    onClick={() => setIsCreating(true)}
+                    style={{
+                        padding: '10px 20px',
+                        background: 'transparent',
+                        color: '#fff',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '2px',
+                        cursor: 'pointer',
+                        fontWeight: '400',
+                        fontSize: '13px',
+                        letterSpacing: '0.05em',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                    }}
+                >
+                    + NEW
+                </button>
             </div>
 
             {/* Creation Form Modal/Inline */}
@@ -245,38 +258,107 @@ export default function CharactersPage() {
             )}
 
             {/* Character Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px', background: 'rgba(255,255,255,0.06)' }}>
                 {characters.map(char => (
-                    <div key={char.id} style={{ position: 'relative', isolation: 'isolate' }}>
+                    <div key={char.id} style={{ position: 'relative', background: '#000', aspectRatio: '1/1' }}>
                         <Link href={`/characters/${char.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                             <div style={{
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid rgba(255,255,255,0.08)',
-                                borderRadius: '16px',
-                                padding: '24px',
-                                textAlign: 'center',
-                                transition: 'transform 0.2s, background 0.2s',
+                                position: 'relative',
+                                background: '#000',
+                                transition: 'all 0.2s ease',
                                 cursor: 'pointer',
                                 height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center'
+                                width: '100%',
+                                overflow: 'hidden'
                             }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
-                                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                                onMouseEnter={(e) => {
+                                    const overlay = e.currentTarget.querySelector('.overlay') as HTMLElement;
+                                    if (overlay) overlay.style.opacity = '1';
+                                }}
+                                onMouseLeave={(e) => {
+                                    const overlay = e.currentTarget.querySelector('.overlay') as HTMLElement;
+                                    if (overlay) overlay.style.opacity = '0';
+                                }}
                             >
-                                <div style={{
-                                    width: '80px', height: '80px', borderRadius: '50%', background: '#222',
-                                    margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    fontSize: '32px', border: '1px solid #333'
-                                }}>
-                                    {char.name.charAt(0)}
-                                </div>
-                                <h3 style={{ color: 'white', fontSize: '20px', fontWeight: '600' }}>{char.name}</h3>
-                                <p style={{ color: '#888', fontSize: '14px', marginTop: '4px' }}>{char.handle || '@unknown'}</p>
+                                {/* Portrait Image */}
+                                {char.avatarUrl ? (
+                                    <img
+                                        src={char.avatarUrl}
+                                        alt={char.name}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            display: 'block'
+                                        }}
+                                    />
+                                ) : (
+                                    <div style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        background: 'rgba(255,255,255,0.03)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '64px',
+                                        fontWeight: '200',
+                                        color: 'rgba(255,255,255,0.1)'
+                                    }}>
+                                        {char.name.charAt(0)}
+                                    </div>
+                                )}
 
-                                <div style={{ marginTop: '20px', padding: '8px', background: '#111', borderRadius: '8px', fontSize: '12px', color: '#666', width: '100%' }}>
-                                    Manage Dashboard →
+                                {/* Info Overlay - Always visible at bottom */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 70%, transparent 100%)',
+                                    padding: '40px 20px 20px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '4px'
+                                }}>
+                                    <h3 style={{
+                                        color: 'white',
+                                        fontSize: '16px',
+                                        fontWeight: '400',
+                                        letterSpacing: '0.02em',
+                                        margin: 0
+                                    }}>{char.name}</h3>
+                                    <p style={{
+                                        color: 'rgba(255,255,255,0.3)',
+                                        fontSize: '11px',
+                                        letterSpacing: '0.03em',
+                                        fontWeight: '300',
+                                        margin: 0
+                                    }}>{char.handle || '@unknown'}</p>
+                                </div>
+
+                                {/* Hover Overlay - Shows manage text */}
+                                <div
+                                    className="overlay"
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        background: 'rgba(0,0,0,0.7)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        opacity: 0,
+                                        transition: 'opacity 0.2s ease',
+                                        fontSize: '11px',
+                                        color: '#fff',
+                                        letterSpacing: '0.1em',
+                                        textTransform: 'uppercase',
+                                        fontWeight: '300'
+                                    }}
+                                >
+                                    Manage →
                                 </div>
                             </div>
                         </Link>
@@ -287,28 +369,35 @@ export default function CharactersPage() {
                                 e.stopPropagation();
                                 handleDelete(char.slug);
                             }}
-                            title="Delete Character"
+                            title="Delete"
                             style={{
                                 position: 'absolute',
                                 top: '12px',
                                 right: '12px',
                                 width: '32px',
                                 height: '32px',
-                                borderRadius: '50%',
+                                borderRadius: '2px',
                                 border: 'none',
-                                background: 'rgba(255, 0, 0, 0.15)',
-                                color: '#ff4444',
+                                background: 'rgba(0,0,0,0.6)',
+                                backdropFilter: 'blur(10px)',
+                                color: 'rgba(255,255,255,0.4)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'pointer',
-                                transition: 'background 0.2s',
+                                transition: 'all 0.2s',
                                 zIndex: 10
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 0, 0, 0.15)'}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(0,0,0,0.8)';
+                                e.currentTarget.style.color = '#ff4444';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(0,0,0,0.6)';
+                                e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+                            }}
                         >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M3 6h18"></path>
                                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
                                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>

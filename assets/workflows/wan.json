@@ -39,7 +39,7 @@
       "model": "wan2.1_t2v_14B_fp8_e4m3fn.safetensors",
       "base_precision": "fp16_fast",
       "quantization": "disabled",
-      "load_device": "offload_device",
+      "load_device": "main_device",
       "attention_mode": "sdpa",
       "rms_norm_function": "default",
       "extra_model": [
@@ -352,7 +352,7 @@
     "inputs": {
       "lora_0": "wan\\lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank32_bf16.safetensors",
       "strength_0": 0.8,
-      "lora_1": "Wan2.1_T2V_14B_FusionX_LoRA.safetensors",
+      "lora_1": "wan\\Wan2.1_T2V_14B_FusionX_LoRA.safetensors",
       "strength_1": 1.8,
       "lora_2": "xxx\\wan\\SECRET_SAUCE_WAN2.1_14B_fp8.safetensors",
       "strength_2": 0.5,
