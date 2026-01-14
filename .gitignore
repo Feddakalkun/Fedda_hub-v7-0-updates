@@ -17,6 +17,12 @@ fanvue-hub/prisma/*.db-journal
 fanvue-hub/prisma/*.db-shm
 fanvue-hub/prisma/*.db-wal
 
+# === PERSONAL CONTENT (Do NOT track) ===
+assets/landingpage/
+assets/TTS/
+fanvue-hub/public/uploads/
+fanvue-hub/public/generated/
+
 # === LOGS & TEMP ===
 logs/
 tmp/
@@ -24,3 +30,8 @@ troubleshoot/
 .DS_Store
 *.log
 Instructions/
+
+# === INSTALLERS ===
+*.exe
+*.msi
+*.code-workspace
