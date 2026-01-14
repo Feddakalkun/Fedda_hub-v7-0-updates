@@ -3,70 +3,75 @@ setlocal EnableDelayedExpansion
 cd /d "%~dp0"
 
 :: ============================================================================
-:: CONFIGURATION - EDIT THIS BEFORE RELEASING
-:: ============================================================================
-set "REPO_URL=https://github.com/Feddakalkun/Fanvue_hub-v6-0-updates.git"
-set "BRANCH=main"
+:: FANVUE HUB - SMART UPDATE SYSTEM
+:: Downloads only changed files from updates repository
 :: ============================================================================
 
-title Fanvue Hub - Updater
+title Fanvue Hub - Update System
+color 0A
+
+echo.
 echo ============================================================================
-echo   FANVUE SYSTEM UPDATER
+echo                    FANVUE HUB UPDATE SYSTEM
 echo ============================================================================
 echo.
-echo [1/3] Checking environment...
+echo This will download and install the latest updates.
+echo Your personal data, models, and settings will not be affected.
+echo.
+pause
 
+:: Configuration
+set "UPDATES_REPO=https://github.com/Feddakalkun/Fanvue_hub-v6-0-updates.git"
+set "TEMP_DIR=%TEMP%\fanvue_updates"
 set "GIT=git_embeded\cmd\git.exe"
+
+:: Check if git is available
 if not exist "%GIT%" (
-    echo [ERROR] git_embeded not found! Cannot perform update.
+    echo [ERROR] git_embeded not found!
+    echo Please reinstall the application.
     pause
     exit /b 1
 )
 
-:: Ensure we are ignored by git (safety check, handled by .gitignore but good to know)
-if not exist .gitignore (
-    echo [WARNING] .gitignore missing! Downloading latest...
-    rem We could download it, but hopefully the repo has it.
+echo [1/4] Preparing update environment...
+:: Clean up old temp directory
+if exist "%TEMP_DIR%" (
+    rd /s /q "%TEMP_DIR%" 2>nul
 )
 
-echo [2/3] Connecting to update server...
+echo [2/4] Downloading updates from GitHub...
+echo Repository: %UPDATES_REPO%
+echo.
 
-if not exist .git (
-    echo [INFO] First time update. Initializing repository...
-    "%GIT%" init
-    "%GIT%" remote add origin %REPO_URL%
-    
-    echo [INFO] Fetching latest version...
-    "%GIT%" fetch origin %BRANCH%
-    
-    echo [INFO] Applying updates (This may take a moment)
-    rem reset --hard ensures we exactly match the repo state for tracked files
-    rem It will NOT delete ignored folders (ComfyUI, python_embeded, etc.)
-    "%GIT%" reset --hard origin/%BRANCH%
-) else (
-    echo [INFO] Repository found. Pulling changes
-    "%GIT%" fetch origin %BRANCH%
-    "%GIT%" reset --hard origin/%BRANCH%
-)
+:: Clone updates repository to temp directory
+"%GIT%" clone --depth 1 --quiet "%UPDATES_REPO%" "%TEMP_DIR%"
 
 if %errorlevel% neq 0 (
     echo.
-    echo [ERROR] Update failed!
-    echo Possible reasons:
+    echo [ERROR] Failed to download updates!
+    echo.
+    echo Possible causes:
     echo  - No internet connection
-    echo  - GitHub repository issues
-    echo  - REPO_URL is incorrect in update.bat
+    echo  - GitHub is down
+    echo  - Repository URL is incorrect
+    echo.
     pause
     exit /b 1
 )
 
-echo.
-echo [3/3] Post-Update Tasks...
-echo [INFO] Checking dependencies
+echo [3/4] Installing updates...
 
-:: Run Prisma generate if schema changed (safe to run always)
+:: Copy all files from temp directory, preserving structure
+xcopy "%TEMP_DIR%\*" "%CD%\" /E /Y /I /Q /EXCLUDE:"%TEMP_DIR%\.git"
+
+:: Delete .git folder if it was copied
+if exist ".git" rd /s /q ".git" 2>nul
+
+echo [4/4] Post-update tasks...
+
+:: Regenerate Prisma client if needed
 if exist "fanvue-hub\prisma\schema.prisma" (
-    echo [INFO] Regenerating database client...
+    echo [INFO] Updating database client...
     cd fanvue-hub
     if exist node_modules (
         call npx prisma generate >nul 2>&1
@@ -74,15 +79,18 @@ if exist "fanvue-hub\prisma\schema.prisma" (
     cd ..
 )
 
-:: Install voice samples if missing (silent, non-blocking)
-echo [INFO] Installing voice samples
-powershell -ExecutionPolicy Bypass -File "scripts\install_voices.ps1" >nul 2>&1
+:: Clean up temp directory
+if exist "%TEMP_DIR%" (
+    rd /s /q "%TEMP_DIR%" 2>nul
+)
 
 echo.
 echo ============================================================================
-echo   UPDATE COMPLETE!
+echo                        UPDATE COMPLETE!
 echo ============================================================================
 echo.
-echo You are now running the latest version.
-echo Press any key to exit.
-pause
+echo Latest version installed successfully.
+echo You can now restart the application.
+echo.
+echo Press any key to exit...
+pause >nul
