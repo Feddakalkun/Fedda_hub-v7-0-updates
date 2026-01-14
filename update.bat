@@ -5,7 +5,7 @@ cd /d "%~dp0"
 :: ============================================================================
 :: CONFIGURATION - EDIT THIS BEFORE RELEASING
 :: ============================================================================
-set "REPO_URL=https://github.com/u0476021922-tech/fanvue-hub-updates.git"
+set "REPO_URL=https://github.com/Feddakalkun/Fanvue_hub-v6-0-updates.git"
 set "BRANCH=main"
 :: ============================================================================
 
