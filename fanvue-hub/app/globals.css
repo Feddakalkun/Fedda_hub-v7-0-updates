@@ -185,3 +185,5 @@ a:hover {
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
 }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }

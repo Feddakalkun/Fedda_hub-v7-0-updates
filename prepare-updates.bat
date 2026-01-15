@@ -19,10 +19,15 @@ mkdir "%UPDATES%\fanvue-hub\types"
 mkdir "%UPDATES%\fanvue-hub\app"
 mkdir "%UPDATES%\fanvue-hub\app\(dashboard)\characters"
 mkdir "%UPDATES%\fanvue-hub\app\(dashboard)\characters\[slug]"
+mkdir "%UPDATES%\fanvue-hub\app\(dashboard)\studio\character"
+mkdir "%UPDATES%\fanvue-hub\components\navigation"
 
 copy "fanvue-hub\app\page.tsx" "%UPDATES%\fanvue-hub\app\" >nul
+copy "fanvue-hub\app\globals.css" "%UPDATES%\fanvue-hub\app\" >nul
 copy "fanvue-hub\app\(dashboard)\characters\page.tsx" "%UPDATES%\fanvue-hub\app\(dashboard)\characters\" >nul
 copy "fanvue-hub\app\(dashboard)\characters\[slug]\page.tsx" "%UPDATES%\fanvue-hub\app\(dashboard)\characters\[slug]\" >nul
+copy "fanvue-hub\app\(dashboard)\studio\character\page.tsx" "%UPDATES%\fanvue-hub\app\(dashboard)\studio\character\" >nul
+copy "fanvue-hub\components\navigation\TabNavigation.tsx" "%UPDATES%\fanvue-hub\components\navigation\" >nul
 copy ".gitignore" "%UPDATES%\" >nul
 copy "UPDATES_README.md" "%UPDATES%\README.md" >nul
 
@@ -30,6 +35,8 @@ echo.
 echo Updates package created at: %UPDATES%
 echo.
 echo Professional UI redesign files packaged:
+echo - Character Studio (New!)
+echo - Navigation updates
 echo - Landing page (removed promotional text)
 echo - Characters gallery (1:1 portrait layout)
 echo - Character detail page (full-width professional design)
