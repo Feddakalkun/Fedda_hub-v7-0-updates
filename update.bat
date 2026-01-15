@@ -21,7 +21,7 @@ echo.
 pause
 
 :: Configuration
-set "UPDATES_REPO=https://github.com/Feddakalkun/Fanvue_hub-v6-0-updates.git"
+set "UPDATES_REPO=https://github.com/Feddakalkun/Fedda_hub-v7-0-updates.git"
 set "TEMP_DIR=%TEMP%\fanvue_updates"
 set "GIT=git_embeded\cmd\git.exe"
 
