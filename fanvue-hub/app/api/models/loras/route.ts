@@ -43,7 +43,9 @@ export async function GET() {
         const loras = getFiles(loraBaseDir, [], loraBaseDir);
 
         // Normalize slashes for frontend consistency
-        const normalizedLoras = loras.map(p => p.replace(/\\/g, '/'));
+        // Update: ComfyUI on Windows expects backslashes in the Enum list for validation.
+        // We should return the path as is from the filesystem (which matches ComfyUI's scan).
+        const normalizedLoras = loras;
 
         return NextResponse.json({ success: true, loras: normalizedLoras });
     } catch (error: any) {
