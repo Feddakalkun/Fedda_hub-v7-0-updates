@@ -45,10 +45,10 @@ export default function CharactersPage() {
 
     const loadLoras = async () => {
         try {
-            const res = await fetch('/api/comfyui/models');
+            const res = await fetch('/api/models/loras');
             const data = await res.json();
-            if (data.success && data.models?.loras) {
-                setAvailableLoras(data.models.loras);
+            if (data.success && data.loras) {
+                setAvailableLoras(data.loras);
             }
         } catch (e) {
             console.error('Failed to load LoRAs:', e);
