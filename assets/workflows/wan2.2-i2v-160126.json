@@ -15,17 +15,63 @@
       "title": "VAE Decode"
     }
   },
+  "50": {
+    "inputs": {
+      "width": [
+        "196",
+        1
+      ],
+      "height": [
+        "196",
+        2
+      ],
+      "length": [
+        "241",
+        0
+      ],
+      "batch_size": 1,
+      "positive": [
+        "255",
+        0
+      ],
+      "negative": [
+        "202",
+        0
+      ],
+      "vae": [
+        "199",
+        0
+      ],
+      "start_image": [
+        "196",
+        0
+      ]
+    },
+    "class_type": "WanImageToVideo",
+    "_meta": {
+      "title": "WanImageToVideo"
+    }
+  },
   "54": {
     "inputs": {
       "shift": 3,
       "model": [
-        "290",
+        "293",
         0
       ]
     },
     "class_type": "ModelSamplingSD3",
     "_meta": {
       "title": "ModelSamplingSD3"
+    }
+  },
+  "116": {
+    "inputs": {
+      "image": "wan22_lastframe_00016_.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
     }
   },
   "177": {
@@ -110,13 +156,69 @@
     "inputs": {
       "shift": 3,
       "model": [
-        "292",
+        "294",
         0
       ]
     },
     "class_type": "ModelSamplingSD3",
     "_meta": {
       "title": "ModelSamplingSD3"
+    }
+  },
+  "194": {
+    "inputs": {
+      "unet_name": "symlink\\Wan\\Wan2.2-I2V-A14B-HighNoise-Q8_0.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "195": {
+    "inputs": {
+      "unet_name": "symlink\\Wan\\Wan2.2-I2V-A14B-LowNoise-Q8_0.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "196": {
+    "inputs": {
+      "image": [
+        "198",
+        0
+      ]
+    },
+    "class_type": "GetImageSizeAndCount",
+    "_meta": {
+      "title": "Get Image Size & Count"
+    }
+  },
+  "197": {
+    "inputs": {
+      "images": [
+        "196",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview start frame"
+    }
+  },
+  "198": {
+    "inputs": {
+      "size": 768,
+      "interpolation_mode": "nearest",
+      "image": [
+        "225",
+        0
+      ]
+    },
+    "class_type": "JWImageResizeByLongerSide",
+    "_meta": {
+      "title": "Image Resize by Longer Side"
     }
   },
   "199": {
@@ -141,7 +243,7 @@
   },
   "201": {
     "inputs": {
-      "text": "",
+      "text": "A delicate petite very young-looking woman, appearing barely out of mid-teens, very slim toned ballerina build, firm petite buttocks elegantly shaped, long slender legs, face slimmer and more youthful with refined delicate features, small narrow jaw, prominent cheekbones, large weary eyes, long tangled dark hair slightly greasy and unwashed with visible roots and light grime clinging to strands, faint smudges of dirt on cheeks and around temples, clad only in shredded fragments of a once-white cotton top that barely drapes across her chest and falls short at the hips, wrists tied together above her head with thick rope secured to an exposed overhead pipe, standing upright on the cracked concrete floor of a vast abandoned warehouse, weak cold fluorescent tubes flickering in the distance, dusty shafts of light from broken windows, she slowly turns her head over her left shoulder to look back at the camera with wide uncertain eyes, faint shivering in her stretched posture, ultra realistic skin with visible texture, moisture, light unwashed grime and dirt streaks, cinematic moody lighting with strong contrast between cold light and deep shadows, shallow depth of field, medium three-quarter rear-to-profile shot, 8k photorealistic, smooth 3-second slow motion, desolate industrial tension atmosphere",
       "clip": [
         "200",
         0
@@ -276,6 +378,22 @@
       "title": "WanVideoBlockSwap Low Pass"
     }
   },
+  "211": {
+    "inputs": {
+      "mode": "random",
+      "seed": 619177493170489,
+      "index": 0,
+      "label": "Batch 001",
+      "path": "D:\\test_path",
+      "pattern": "*",
+      "allow_RGBA_output": "false",
+      "filename_text_extension": "true"
+    },
+    "class_type": "Load Image Batch",
+    "_meta": {
+      "title": "Load Image Batch"
+    }
+  },
   "215": {
     "inputs": {
       "images": [
@@ -327,28 +445,26 @@
       "title": "Float to Integer"
     }
   },
-  "230": {
+  "225": {
     "inputs": {
-      "unet_name": "wan2.2_t2v_high_noise_14B_Q5_K_M.gguf"
+      "any_01": [
+        "116",
+        0
+      ],
+      "any_02": [
+        "211",
+        0
+      ]
     },
-    "class_type": "UnetLoaderGGUF",
+    "class_type": "Any Switch (rgthree)",
     "_meta": {
-      "title": "Unet Loader (GGUF)"
-    }
-  },
-  "231": {
-    "inputs": {
-      "unet_name": "wan2.2_t2v_low_noise_14B_Q5_K_M.gguf"
-    },
-    "class_type": "UnetLoaderGGUF",
-    "_meta": {
-      "title": "Unet Loader (GGUF)"
+      "title": "Any Switch (rgthree)"
     }
   },
   "232": {
     "inputs": {
-      "any_01": [
-        "230",
+      "any_02": [
+        "194",
         0
       ]
     },
@@ -359,8 +475,8 @@
   },
   "233": {
     "inputs": {
-      "any_01": [
-        "231",
+      "any_02": [
+        "195",
         0
       ]
     },
@@ -369,49 +485,10 @@
       "title": "Any Switch (rgthree)"
     }
   },
-  "234": {
-    "inputs": {
-      "Xi": 5,
-      "Xf": 5,
-      "isfloatX": 0
-    },
-    "class_type": "mxSlider",
-    "_meta": {
-      "title": "clip lenght ( in seconds )"
-    }
-  },
-  "235": {
-    "inputs": {
-      "expression": "a*16",
-      "a": [
-        "234",
-        0
-      ]
-    },
-    "class_type": "MathExpression|pysssss",
-    "_meta": {
-      "title": "Math Expression 🐍"
-    }
-  },
-  "236": {
-    "inputs": {
-      "width": 480,
-      "height": 720,
-      "length": [
-        "235",
-        0
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyHunyuanLatentVideo",
-    "_meta": {
-      "title": "Empty Latent Video"
-    }
-  },
   "237": {
     "inputs": {
       "any_01": [
-        "255",
+        "50",
         0
       ],
       "any_02": [
@@ -427,8 +504,8 @@
   "238": {
     "inputs": {
       "any_01": [
-        "202",
-        0
+        "50",
+        1
       ],
       "any_02": [
         "202",
@@ -442,14 +519,38 @@
   },
   "239": {
     "inputs": {
-      "any_02": [
-        "236",
-        0
+      "any_01": [
+        "50",
+        2
       ]
     },
     "class_type": "Any Switch (rgthree)",
     "_meta": {
       "title": "latent"
+    }
+  },
+  "241": {
+    "inputs": {
+      "expression": "a*16+1",
+      "a": [
+        "242",
+        0
+      ]
+    },
+    "class_type": "MathExpression|pysssss",
+    "_meta": {
+      "title": "Math Expression 🐍"
+    }
+  },
+  "242": {
+    "inputs": {
+      "Xi": 5,
+      "Xf": 5,
+      "isfloatX": 0
+    },
+    "class_type": "mxSlider",
+    "_meta": {
+      "title": "clip lenght ( in seconds )"
     }
   },
   "255": {
@@ -475,15 +576,15 @@
       "title": "Generation Steps"
     }
   },
-  "290": {
+  "293": {
     "inputs": {
       "PowerLoraLoaderHeaderWidget": {
         "type": "PowerLoraLoaderHeaderWidget"
       },
-      "lora_1": {
+      "lora_5": {
         "on": true,
         "lora": "wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors",
-        "strength": 3
+        "strength": 1
       },
       "➕ Add Lora": "",
       "model": [
@@ -497,18 +598,18 @@
     },
     "class_type": "Power Lora Loader (rgthree)",
     "_meta": {
-      "title": "T2V HIGH LORA"
+      "title": "I2V HIGH LORA"
     }
   },
-  "292": {
+  "294": {
     "inputs": {
       "PowerLoraLoaderHeaderWidget": {
         "type": "PowerLoraLoaderHeaderWidget"
       },
-      "lora_1": {
+      "lora_5": {
         "on": true,
         "lora": "wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors",
-        "strength": 1.5
+        "strength": 1
       },
       "➕ Add Lora": "",
       "model": [
@@ -522,7 +623,7 @@
     },
     "class_type": "Power Lora Loader (rgthree)",
     "_meta": {
-      "title": "T2V LOW LORA"
+      "title": "I2V LOW LORA"
     }
   },
   "295": {
@@ -544,6 +645,7 @@
   },
   "296": {
     "inputs": {
+      "text": "=== DOWNLOAD REPORT ===\nTotal files: 14\nSuccessful downloads: 4\nAlready existed: 10\nInterrupted: 0\nFailed: 0\nMax concurrent: 3\nSpeed limit: Unlimited\nResume enabled: True\nValidation enabled: False\nAuto-organize: False\n\nDetails:\n✓ wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors: Already exists (585.10 MB)\n✓ wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors: Already exists (585.10 MB)\n✓ wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors: Already exists (605.25 MB)\n✓ wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors: Already exists (705.22 MB)\n✓ RealESRGAN_x2.pth: Already exists (63.96 MB)\n✓ RealESRGAN_x4.pth: Already exists (63.94 MB)\n✓ RealESRGAN_x8.pth: Already exists (64.08 MB)\n✓ umt5_xxl_fp16.safetensors: Already exists (10.59 GB)\n✓ umt5_xxl_fp8_e4m3fn_scaled.safetensors: Already exists (6.27 GB)\n✓ wan_2.1_vae.safetensors: Already exists (242.06 MB)\n✓ wan2.2_i2v_high_noise_14B_Q8_0.gguf: Downloaded successfully to unet/ (14.35 GB)\n✓ wan2.2_i2v_low_noise_14B_Q8_0.gguf: Downloaded successfully to unet/ (14.35 GB)\n✓ wan2.2_t2v_high_noise_14B_Q8_0.gguf: Downloaded successfully to unet/ (14.35 GB)\n✓ wan2.2_t2v_low_noise_14B_Q8_0.gguf: Downloaded successfully to unet/ (14.35 GB)",
       "anything": [
         "295",
         0

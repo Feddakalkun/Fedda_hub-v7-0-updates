@@ -100,7 +100,25 @@ function Pause-Step {
 
 Write-Log "========================================="
 Write-Log "Portable Installation Started"
-Write-Log "========================================="
+Write-Log "=========================================`n"
+
+Write-Log "INSTALLATION OVERVIEW:"
+Write-Log "----------------------"
+Write-Log "This installer will set up:"
+Write-Log "  - Portable Python, Git, and Node.js (embedded)"
+Write-Log "  - ComfyUI (AI generation engine) + Custom Nodes"
+Write-Log "  - Fanvue Hub (Web dashboard)"
+Write-Log "  - Ollama (Local LLM)"
+Write-Log "  - VoxCPM (Text-to-speech)"
+Write-Log ""
+Write-Log "STORAGE REQUIREMENTS:"
+Write-Log "  - Base installation: ~10-15 GB"
+Write-Log "  - Models download on FIRST USE (automatic)"
+Write-Log "  - ComfyUI/models folder can grow LARGE over time"
+Write-Log "  - Recommend 50GB+ free space for comfortable usage"
+Write-Log ""
+Write-Log "This may take 15-30 minutes depending on internet speed..."
+Write-Log "=========================================`n"
 
 # ============================================================================ 
 # 1. BOOTSTRAP PORTABLE TOOLS
@@ -300,6 +318,24 @@ if (-not (Test-Path $ComfyDir)) {
 }
 else {
     Write-Log "ComfyUI directory already exists."
+}
+
+# Copy bundled workflows and styles
+Write-Log "Copying bundled workflows and styles..."
+$AssetsWorkflowsDir = Join-Path $RootPath "assets\workflows"
+$ComfyWorkflowsDir = Join-Path $ComfyDir "user\default\workflows"
+$AssetsStylesFile = Join-Path $RootPath "assets\styles.csv"
+$ComfyStylesFile = Join-Path $ComfyDir "styles.csv"
+
+if (Test-Path $AssetsWorkflowsDir) {
+    New-Item -ItemType Directory -Path $ComfyWorkflowsDir -Force | Out-Null
+    Copy-Item -Path "$AssetsWorkflowsDir\*" -Destination $ComfyWorkflowsDir -Recurse -Force
+    Write-Log "Bundled workflows copied to ComfyUI/user/default/workflows"
+}
+
+if (Test-Path $AssetsStylesFile) {
+    Copy-Item -Path $AssetsStylesFile -Destination $ComfyStylesFile -Force
+    Write-Log "Styles.csv copied to ComfyUI root"
 }
 
 Pause-Step
