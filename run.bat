@@ -118,6 +118,14 @@ set PYTHONUNBUFFERED=1
 set PYTHONIOENCODING=utf-8
 set PYTHONPATH=%COMFYUI_DIR%;%PYTHONPATH%
 
+
+:: Force ComfyUI Manager Security Level to WEAK
+set "MGR_CONFIG=%COMFYUI_DIR%\user\default\ComfyUI-Manager\config.ini"
+if exist "%MGR_CONFIG%" (
+    echo [SEC] Enforcing Security Level: WEAK
+    powershell -Command "(Get-Content '%MGR_CONFIG%') -replace 'security_level\s*=\s*\w+', 'security_level = weak' | Set-Content '%MGR_CONFIG%'"
+)
+
 echo Clearing port 8188...
 for /f "tokens=5" %%a in ('netstat -aon 2^>nul ^| findstr ":8188"') do taskkill /F /PID %%a 2>nul
 timeout /t 1 >nul

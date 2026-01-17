@@ -5,8 +5,8 @@ node_embeded/
 ollama_embeded/
 
 # === AI SUITES (Do NOT track) ===
-ComfyUI/
-VoxCPM/
+/ComfyUI/
+/VoxCPM/
 
 # === APP ARTIFACTS ===
 fanvue-hub/node_modules/

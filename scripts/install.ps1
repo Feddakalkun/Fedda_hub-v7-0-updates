@@ -99,26 +99,41 @@ function Pause-Step {
 }
 
 Write-Log "========================================="
-Write-Log "Portable Installation Started"
+Write-Log "   FEDDA-HUB - ULTIMATE AI ECOSYSTEM     "
 Write-Log "=========================================`n"
 
 Write-Log "INSTALLATION OVERVIEW:"
 Write-Log "----------------------"
-Write-Log "This installer will set up:"
-Write-Log "  - Portable Python, Git, and Node.js (embedded)"
-Write-Log "  - ComfyUI (AI generation engine) + Custom Nodes"
-Write-Log "  - Fanvue Hub (Web dashboard)"
-Write-Log "  - Ollama (Local LLM)"
-Write-Log "  - VoxCPM (Text-to-speech)"
+Write-Log "This script will deploy a complete AI production studio:"
 Write-Log ""
-Write-Log "STORAGE REQUIREMENTS:"
-Write-Log "  - Base installation: ~10-15 GB"
-Write-Log "  - Models download on FIRST USE (automatic)"
-Write-Log "  - ComfyUI/models folder can grow LARGE over time"
-Write-Log "  - Recommend 50GB+ free space for comfortable usage"
+Write-Log "1. [CORE] ComfyUI Generation Engine"
+Write-Log "   - Pre-installed with 40+ Essential Custom Nodes"
+Write-Log "   - Bundled with Professional Workflows (Flux, Wan 2.1/2.2)"
+Write-Log "   - Integrated with latest PyTorch & CUDA 12.4"
 Write-Log ""
-Write-Log "This may take 15-30 minutes depending on internet speed..."
+Write-Log "2. [INTERFACE] Fedda-Hub Dashboard"
+Write-Log "   - Modern Web UI for character management"
+Write-Log "   - Project organization and asset tracking"
+Write-Log ""
+Write-Log "3. [INTELLIGENCE] AI Subsystems"
+Write-Log "   - Ollama: Local LLM for dynamic text generation"
+Write-Log "   - VoxCPM: High-quality Text-to-Speech engine"
+Write-Log ""
+Write-Log "STORAGE & REQUIREMENTS:"
+Write-Log "-----------------------"
+Write-Log "  - Base Installation: ~15 GB (Python, Engines, Dependencies)"
+Write-Log "  - Dynamic Growth: Large models download AUTOMATICALLY on first use"
+Write-Log "    of a specific task (e.g., first video gen, first image gen)."
+Write-Log "  - Management: The bulk of space will be taken by 'ComfyUI\models'."
+Write-Log "    Check this folder if you need to reclaim space later."
+Write-Log ""
+Write-Log "This process typically takes 15-30 minutes."
+Write-Log "NOTE: Some steps (like 'Installing Custom Nodes') may pause"
+Write-Log "for several minutes without output. THIS IS NORMAL."
+Write-Log "Please be patient and do NOT close the window."
 Write-Log "=========================================`n"
+
+Read-Host "Press Enter to begin installation..."
 
 # ============================================================================ 
 # 1. BOOTSTRAP PORTABLE TOOLS
@@ -689,3 +704,6 @@ Write-Log "================================================"
 # Keep window open for user review
 Write-Host "`nPress any key to continue..." -ForegroundColor Yellow
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+# Copy Voice Samples
+Copy-Item -Path "\assets\TTS\*" -Destination "\VoxCPM\assets\TTS" -Recurse -Force -ErrorAction SilentlyContinue
+Write-Log "[Voice Pack] Copied assets."

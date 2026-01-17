@@ -33,13 +33,13 @@ if not exist "%GIT%" (
     exit /b 1
 )
 
-echo [1/4] Preparing update environment...
+echo [1/5] Preparing update environment...
 :: Clean up old temp directory
 if exist "%TEMP_DIR%" (
     rd /s /q "%TEMP_DIR%" 2>nul
 )
 
-echo [2/4] Downloading updates from GitHub...
+echo [2/5] Downloading updates from GitHub...
 echo Repository: %UPDATES_REPO%
 echo.
 
@@ -59,7 +59,17 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo [3/4] Installing updates...
+echo [3/5] Updating ComfyUI Engine...
+if exist "ComfyUI\.git" (
+    echo Updating ComfyUI core...
+    cd ComfyUI
+    "%GIT%" pull
+    cd ..
+) else (
+    echo [SKIP] ComfyUI git repo not found.
+)
+
+echo [4/5] Installing Dashboard updates...
 
 :: Copy all files from temp directory, preserving structure
 xcopy "%TEMP_DIR%\*" "%CD%\" /E /Y /I /Q /EXCLUDE:"%TEMP_DIR%\.git"
@@ -67,7 +77,7 @@ xcopy "%TEMP_DIR%\*" "%CD%\" /E /Y /I /Q /EXCLUDE:"%TEMP_DIR%\.git"
 :: Delete .git folder if it was copied
 if exist ".git" rd /s /q ".git" 2>nul
 
-echo [4/4] Post-update tasks...
+echo [5/5] Post-update tasks...
 
 :: Regenerate Prisma client if needed
 if exist "fanvue-hub\prisma\schema.prisma" (

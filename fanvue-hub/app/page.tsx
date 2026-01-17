@@ -144,6 +144,17 @@ export default function LandingPage() {
                         }}>
                             {statusMessage}
                         </p>
+                        {/* FIRST RUN NOTE */}
+                        <p style={{
+                            fontSize: '10px',
+                            color: '#555',
+                            marginTop: '0px',
+                            maxWidth: '280px',
+                            textAlign: 'center',
+                            lineHeight: '1.4'
+                        }}>
+                            First launch may take 2-5 minutes initializing AI engines.
+                        </p>
                     </div>
                 )}
 

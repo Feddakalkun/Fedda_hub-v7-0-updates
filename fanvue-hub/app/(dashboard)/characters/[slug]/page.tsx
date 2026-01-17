@@ -310,51 +310,60 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
-                            <button
-                                onClick={handleGenerateAvatar}
-                                disabled={progressState.status !== 'idle'}
-                                style={{
-                                    padding: '10px 16px',
-                                    background: progressState.status !== 'idle' ? '#222' : 'rgba(255,255,255,0.05)',
-                                    color: progressState.status !== 'idle' ? '#666' : '#fff',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '2px',
-                                    cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
-                                    fontWeight: '400',
-                                    fontSize: '12px',
-                                    letterSpacing: '0.05em',
-                                    opacity: progressState.status !== 'idle' ? 0.5 : 1
-                                }}
-                            >
-                                {progressState.status !== 'idle' ? 'Generating...' : 'Generate with AI'}
-                            </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div>
+                                    <button
+                                        onClick={handleGenerateAvatar}
+                                        disabled={progressState.status !== 'idle'}
+                                        style={{
+                                            padding: '10px 16px',
+                                            background: progressState.status !== 'idle' ? '#222' : 'rgba(255,255,255,0.05)',
+                                            color: progressState.status !== 'idle' ? '#666' : '#fff',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                            borderRadius: '2px',
+                                            cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
+                                            fontWeight: '400',
+                                            fontSize: '12px',
+                                            letterSpacing: '0.05em',
+                                            opacity: progressState.status !== 'idle' ? 0.5 : 1
+                                        }}
+                                    >
+                                        {progressState.status !== 'idle' ? 'Generating...' : 'Generate with AI'}
+                                    </button>
+                                    {progressState.status !== 'idle' && (
+                                        <p style={{ fontSize: '10px', color: '#555', marginTop: '8px', lineHeight: '1.4' }}>
+                                            ℹ️ First run: ~2-5 mins (Downloading models)
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div style={{ display: 'flex', gap: '12px' }}>
-                                <button
-                                    onClick={() => setIsAvatarModalOpen(false)}
-                                    disabled={progressState.status !== 'idle'}
-                                    style={{ padding: '10px 16px', background: 'transparent', color: '#666', border: 'none', cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer', fontSize: '12px', letterSpacing: '0.05em' }}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleAvatarUpdate}
-                                    disabled={progressState.status !== 'idle'}
-                                    style={{
-                                        padding: '10px 20px',
-                                        background: progressState.status !== 'idle' ? '#222' : '#fff',
-                                        color: progressState.status !== 'idle' ? '#666' : '#000',
-                                        border: 'none',
-                                        borderRadius: '2px',
-                                        cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
-                                        fontSize: '12px',
-                                        fontWeight: '500',
-                                        letterSpacing: '0.05em'
-                                    }}
-                                >
-                                    Save
-                                </button>
+                                <div style={{ display: 'flex', gap: '12px' }}>
+                                    <button
+                                        onClick={() => setIsAvatarModalOpen(false)}
+                                        disabled={progressState.status !== 'idle'}
+                                        style={{ padding: '10px 16px', background: 'transparent', color: '#666', border: 'none', cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer', fontSize: '12px', letterSpacing: '0.05em' }}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleAvatarUpdate}
+                                        disabled={progressState.status !== 'idle'}
+                                        style={{
+                                            padding: '10px 20px',
+                                            background: progressState.status !== 'idle' ? '#222' : '#fff',
+                                            color: progressState.status !== 'idle' ? '#666' : '#000',
+                                            border: 'none',
+                                            borderRadius: '2px',
+                                            cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
+                                            fontSize: '12px',
+                                            fontWeight: '500',
+                                            letterSpacing: '0.05em'
+                                        }}
+                                    >
+                                        Save
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -865,6 +874,6 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
