@@ -860,7 +860,7 @@ export default function ImageGenerator({
                             width: '100%',
                             padding: '12px',
                             background: 'black',
-                            border: `1px solid ${isProcessingRef.current && progressState.status === 'idle' ? '#f59e0b' : '#333'}`,
+                            border: `1px solid ${isProcessingRef.current && progressState.status === 'idle' ? '#fff' : '#333'}`,
                             color: 'white',
                             borderRadius: '8px',
                             resize: 'vertical',
@@ -870,11 +870,11 @@ export default function ImageGenerator({
                     />
                     {appearance && (
                         <p style={{ fontSize: '11px', color: '#666', marginTop: '6px' }}>
-                            💡 Your character's appearance will be automatically prepended
+                            Your character's appearance will be automatically prepended
                         </p>
                     )}
-                    <p style={{ fontSize: '11px', color: '#f59e0b', marginTop: '6px', fontWeight: '500' }}>
-                        🎯 Tip: Keep clicking "Generate" to queue multiple prompts. Your prompt will clear after each add!
+                    <p style={{ fontSize: '11px', color: '#888', marginTop: '6px', fontWeight: '500' }}>
+                        Tip: Keep clicking "Generate" to queue multiple prompts. Your prompt will clear after each add!
                     </p>
                 </div>
 
@@ -1008,14 +1008,14 @@ export default function ImageGenerator({
                 {queue.length > 0 && (
                     <div style={{
                         padding: '16px',
-                        background: 'rgba(245, 158, 11, 0.05)',
-                        border: '1px solid rgba(245, 158, 11, 0.2)',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: '12px',
                         marginTop: '12px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                            <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#f59e0b' }}>
-                                📋 Generation Queue ({queue.length} {queue.length === 1 ? 'item' : 'items'})
+                            <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}>
+                                Generation Queue ({queue.length} {queue.length === 1 ? 'item' : 'items'})
                             </h4>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 {isProcessingRef.current && (
@@ -1077,8 +1077,8 @@ export default function ImageGenerator({
                                                 <span style={{
                                                     fontSize: '11px',
                                                     fontWeight: '700',
-                                                    color: idx === 0 && isProcessingRef.current ? '#22c55e' : '#f59e0b',
-                                                    background: idx === 0 && isProcessingRef.current ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                                                    color: idx === 0 && isProcessingRef.current ? '#22c55e' : '#fff',
+                                                    background: idx === 0 && isProcessingRef.current ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255, 255, 255, 0.1)',
                                                     padding: '4px 8px',
                                                     borderRadius: '4px'
                                                 }}>

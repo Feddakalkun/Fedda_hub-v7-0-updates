@@ -865,7 +865,7 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                 </button>
                                 <button
                                     onClick={handleSaveSettings}
-                                    style={{ padding: '12px 32px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+                                    style={{ padding: '12px 32px', background: '#fff', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
                                 >
                                     Save Changes
                                 </button>
