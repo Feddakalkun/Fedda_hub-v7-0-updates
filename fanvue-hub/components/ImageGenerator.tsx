@@ -527,7 +527,7 @@ export default function ImageGenerator({
             }}>
                 <div>
                     <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>
-                        🎨 Text to Image Generator
+                        Text to Image Generator
                     </h3>
                     <p style={{ fontSize: '13px', color: '#666' }}>
                         Generate images for {characterName} using ComfyUI
@@ -687,13 +687,13 @@ export default function ImageGenerator({
                     {/* Appearance Customization */}
                     <div style={{
                         padding: '16px',
-                        background: 'rgba(138, 43, 226, 0.05)',
-                        border: '1px solid rgba(138, 43, 226, 0.2)',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: '8px',
                         marginBottom: '16px'
                     }}>
-                        <h4 style={{ fontSize: '13px', fontWeight: '600', marginBottom: '12px', color: '#ba55d3' }}>
-                            ✨ Appearance Customization
+                        <h4 style={{ fontSize: '13px', fontWeight: '600', marginBottom: '12px', color: '#fff' }}>
+                            Appearance Customization
                         </h4>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 20px' }}>
@@ -701,7 +701,7 @@ export default function ImageGenerator({
                             <div>
                                 <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
                                     <span>👤 Age</span>
-                                    <span style={{ color: '#ba55d3', fontWeight: '600' }}>{age} years</span>
+                                    <span style={{ color: '#fff', fontWeight: '600' }}>{age} years</span>
                                 </label>
                                 <input
                                     type="range"
@@ -709,7 +709,7 @@ export default function ImageGenerator({
                                     max="45"
                                     value={age}
                                     onChange={(e) => setAge(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#ba55d3' }}
+                                    style={{ width: '100%', accentColor: '#fff' }}
                                 />
                             </div>
 
@@ -717,7 +717,7 @@ export default function ImageGenerator({
                             <div>
                                 <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
                                     <span>💎 Breast Size</span>
-                                    <span style={{ color: '#ba55d3', fontWeight: '600' }}>
+                                    <span style={{ color: '#fff', fontWeight: '600' }}>
                                         {['Flat', 'Petite (A)', 'Modest (B)', 'Medium (C)', 'Full (C+)', 'D-Cup'][breastSize - 1]}
                                     </span>
                                 </label>
@@ -780,7 +780,7 @@ export default function ImageGenerator({
                                         padding: '8px',
                                         background: 'black',
                                         border: '1px solid #333',
-                                        color: '#ba55d3',
+                                        color: '#fff',
                                         borderRadius: '6px',
                                         fontSize: '12px',
                                         cursor: 'pointer'
@@ -908,7 +908,7 @@ export default function ImageGenerator({
                 {progressState.status !== 'idle' && (
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <span style={{ fontSize: '13px', color: '#a78bfa', fontWeight: '600' }}>
+                            <span style={{ fontSize: '13px', color: '#fff', fontWeight: '600' }}>
                                 {progressState.message}
                             </span>
                             <span style={{ fontSize: '12px', color: '#888' }}>
@@ -926,9 +926,9 @@ export default function ImageGenerator({
                             <div style={{
                                 width: `${progressState.progress}%`,
                                 height: '100%',
-                                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                                background: '#fff',
                                 transition: 'width 0.3s ease',
-                                boxShadow: progressState.progress > 0 ? '0 0 10px rgba(102, 126, 234, 0.5)' : 'none'
+                                boxShadow: 'none'
                             }} />
                         </div>
                     </div>
@@ -981,8 +981,8 @@ export default function ImageGenerator({
                     disabled={!loraPath}
                     style={{
                         padding: '16px 24px',
-                        background: !loraPath ? '#444' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        color: 'white',
+                        background: !loraPath ? '#444' : '#fff',
+                        color: !loraPath ? '#666' : '#000',
                         border: 'none',
                         borderRadius: '8px',
                         cursor: !loraPath ? 'not-allowed' : 'pointer',
@@ -994,8 +994,8 @@ export default function ImageGenerator({
                     }}
                 >
                     {isProcessingRef.current && queue.length > 0
-                        ? `➕ Add to Queue (${queue.length} in queue)`
-                        : '✨ Generate Images'}
+                        ? `Add to Queue (${queue.length} in queue)`
+                        : 'Generate Images'}
                 </button>
 
                 {!loraPath && (
@@ -1208,7 +1208,7 @@ export default function ImageGenerator({
                                         style={{
                                             flex: 1,
                                             padding: '8px 12px',
-                                            background: '#6366f1',
+                                            background: '#fff',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '6px',
@@ -1244,7 +1244,7 @@ export default function ImageGenerator({
                                         }}
                                         style={{
                                             padding: '8px 12px',
-                                            background: '#8b5cf6',
+                                            background: '#333',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '6px',
