@@ -35,5 +35,6 @@ Instructions/
 *.exe
 *.msi
 *.code-workspace
+download-lila.bat
 
 unused_workflows_backup/
