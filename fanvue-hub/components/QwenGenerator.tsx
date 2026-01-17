@@ -101,8 +101,8 @@ export default function QwenGenerator({ characterSlug, qwenLoraPath }: QwenGener
 
                 {/* Info */}
                 {qwenLoraPath && (
-                    <div style={{ padding: '8px', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '6px', fontSize: '11px', color: '#818cf8' }}>
-                        🔮 Using Qwen Identity: <br />{qwenLoraPath.split(/[/\\]/).pop()}
+                    <div style={{ padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '6px', fontSize: '11px', color: '#888' }}>
+                        Using Qwen Identity: <br />{qwenLoraPath.split(/[/\\]/).pop()}
                     </div>
                 )}
 
@@ -176,8 +176,9 @@ export default function QwenGenerator({ characterSlug, qwenLoraPath }: QwenGener
                     disabled={status === 'uploading' || status === 'generating'}
                     style={{
                         padding: '12px',
-                        background: status === 'generating' ? '#444' : '#6366f1',
-                        color: 'white', border: 'none', borderRadius: '8px',
+                        background: status === 'generating' ? '#444' : '#fff',
+                        color: status === 'generating' ? '#666' : '#000',
+                        border: 'none', borderRadius: '8px',
                         cursor: status === 'generating' ? 'wait' : 'pointer',
                         fontWeight: 'bold'
                     }}
@@ -194,7 +195,7 @@ export default function QwenGenerator({ characterSlug, qwenLoraPath }: QwenGener
             {/* Preview Area (Simplified) */}
             <div style={{ background: '#111', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px', border: '1px dashed #333' }}>
                 <div style={{ textAlign: 'center', color: '#444' }}>
-                    <div style={{ fontSize: '40px', marginBottom: '16px' }}>👁️</div>
+                    <div style={{ fontSize: '40px', marginBottom: '16px', color: '#444' }}>Preview</div>
                     <p>Generated images will appear in the Library</p>
                     <p style={{ fontSize: '12px' }}>(Real-time preview coming soon)</p>
                 </div>

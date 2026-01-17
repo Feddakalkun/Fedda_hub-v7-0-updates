@@ -116,7 +116,7 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
 
     return (
         <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
-            <h3 style={{ marginBottom: '20px' }}>🎬 Wan 2.1 Video Generator</h3>
+            <h3 style={{ marginBottom: '20px' }}>Wan 2.1 Video Generator</h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
 
@@ -141,7 +141,7 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={selectedImage} alt="Source" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
-                                    <span style={{ fontSize: '24px' }}>🖼️</span>
+                                    <span style={{ fontSize: '24px', color: '#666' }}>No Image</span>
                                 )}
                             </div>
 
@@ -207,13 +207,14 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
                         disabled={progressState.status !== 'idle' || !selectedImage}
                         style={{
                             padding: '16px', borderRadius: '8px',
-                            background: progressState.status !== 'idle' ? '#444' : 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)',
-                            color: 'white', border: 'none', fontWeight: 'bold', fontSize: '16px',
+                            background: progressState.status !== 'idle' ? '#444' : '#fff',
+                            color: progressState.status !== 'idle' ? '#666' : '#000',
+                            border: 'none', fontWeight: 'bold', fontSize: '16px',
                             cursor: progressState.status !== 'idle' ? 'not-allowed' : 'pointer',
                             opacity: (!selectedImage) ? 0.5 : 1
                         }}
                     >
-                        {progressState.status !== 'idle' ? 'Generating Video...' : '✨ Generate Video'}
+                        {progressState.status !== 'idle' ? 'Generating Video...' : 'Generate Video'}
                     </button>
 
                     {/* Progress Bar */}
@@ -224,7 +225,7 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
                                 <span>{Math.round(progressState.progress)}%</span>
                             </div>
                             <div style={{ width: '100%', height: '6px', background: '#222', borderRadius: '3px' }}>
-                                <div style={{ width: `${progressState.progress}%`, height: '100%', background: '#f59e0b', transition: 'width 0.3s' }} />
+                                <div style={{ width: `${progressState.progress}%`, height: '100%', background: '#fff', transition: 'width 0.3s' }} />
                             </div>
                         </div>
                     )}
@@ -244,22 +245,22 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
                             <div style={{ display: 'flex', gap: '12px' }}>
                                 <button
                                     onClick={handleSave}
-                                    style={{ flex: 1, padding: '12px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    style={{ flex: 1, padding: '12px', background: '#fff', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
                                 >
-                                    📥 Save to Library
+                                    Save to Library
                                 </button>
                                 <a
                                     href={generatedVideo}
                                     download="wan21_video.mp4"
                                     style={{ flex: 1, padding: '12px', background: '#333', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', textAlign: 'center', textDecoration: 'none' }}
                                 >
-                                    ⬇️ Download
+                                    Download
                                 </a>
                             </div>
                         </div>
                     ) : (
                         <div style={{ textAlign: 'center', color: '#444' }}>
-                            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🎬</div>
+                            <div style={{ fontSize: '48px', marginBottom: '12px', color: '#444' }}>Video Preview</div>
                             <p>Generated video will appear here</p>
                         </div>
                     )}
@@ -282,7 +283,7 @@ export default function LTX2Generator({ characterSlug }: LTX2GeneratorProps) {
                                 padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', zIndex: 2100
                             }}
                         >
-                            ✕ Close Library
+                            Close Library
                         </button>
 
                         <h2 style={{ color: 'white', marginBottom: '20px' }}>Select Source Image</h2>
