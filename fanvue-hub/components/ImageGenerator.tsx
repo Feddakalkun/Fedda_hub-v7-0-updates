@@ -35,13 +35,7 @@ export default function ImageGenerator({
     const [generatedImagesData, setGeneratedImagesData] = useState<GeneratedImageData[]>([]);
 
     // Appearance customization sliders
-    const [age, setAge] = useState(22);
-    const [breastSize, setBreastSize] = useState(3); // 1=flat, 2=petite, 3=modest, 4=medium, 5=full, 6=D-cup
-    const [height, setHeight] = useState(3); // 1=very petite, 2=petite, 3=average, 4=tall, 5=very tall
-    const [bodyType, setBodyType] = useState('athletic'); // slim, athletic, curvy, thick
-    const [skinTone, setSkinTone] = useState('fair'); // pale, fair, tan, olive, brown, deep
-    const [hairColor, setHairColor] = useState('blonde'); // blonde, brunette, black, red, auburn
-    const [hairLength, setHairLength] = useState(3); // 1=pixie, 2=short, 3=shoulder, 4=long, 5=very long
+
 
     // Queue system
     interface QueueItem {
@@ -50,87 +44,12 @@ export default function ImageGenerator({
         fullPrompt: string; // The complete prompt with appearance modifiers
         numImages: number;
         aspectRatio: string;
-        age: number;
-        breastSize: number;
-        height: number;
-        bodyType: string;
-        skinTone: string;
-        hairColor: string;
-        hairLength: number;
+
     }
     const [queue, setQueue] = useState<QueueItem[]>([]);
     const isProcessingRef = useRef(false);
 
-    // Generate appearance description from sliders
-    const getAppearanceFromSliders = () => {
-        const parts = [];
 
-        // Age
-        parts.push(`${age} years old`);
-
-        // Breast size
-        const breastSizes = {
-            1: 'completely flat chest athletic tomboy physique',
-            2: 'petite perky A-cup breasts small delicate',
-            3: 'modest natural B-cup breasts perfect proportions',
-            4: 'medium shapely C-cup breasts feminine curves',
-            5: 'full voluptuous breasts ample cleavage',
-            6: 'large D-cup breasts generous bustline'
-        };
-        parts.push(breastSizes[breastSize as keyof typeof breastSizes]);
-
-        // Height
-        const heights = {
-            1: '150cm very petite small frame delicate',
-            2: '160cm petite slender build',
-            3: '168cm average height well-proportioned',
-            4: '175cm tall statuesque leggy',
-            5: '180cm very tall model height long legs'
-        };
-        parts.push(heights[height as keyof typeof heights]);
-
-        // Body type
-        const bodyTypes = {
-            slim: 'slim slender lean physique toned',
-            athletic: 'athletic fit toned defined muscles gym body',
-            curvy: 'curvy hourglass figure feminine soft curves',
-            thick: 'thick voluptuous plush body thicc'
-        };
-        parts.push(bodyTypes[bodyType as keyof typeof bodyTypes]);
-
-        // Skin tone
-        const skinTones = {
-            pale: 'porcelain pale skin ivory complexion',
-            fair: 'fair skin natural light complexion',
-            tan: 'sun-kissed tan skin golden glow',
-            olive: 'olive skin Mediterranean complexion',
-            brown: 'brown skin rich caramel tone',
-            deep: 'deep dark skin ebony complexion'
-        };
-        parts.push(skinTones[skinTone as keyof typeof skinTones]);
-
-        // Hair color
-        const hairColors = {
-            blonde: 'blonde hair golden locks',
-            brunette: 'brunette hair chestnut brown',
-            black: 'black hair raven dark',
-            red: 'red hair fiery ginger',
-            auburn: 'auburn hair copper highlights'
-        };
-        parts.push(hairColors[hairColor as keyof typeof hairColors]);
-
-        // Hair length
-        const hairLengths = {
-            1: 'pixie cut short cropped hair',
-            2: 'short hair chin-length bob',
-            3: 'shoulder-length hair medium',
-            4: 'long hair flowing past shoulders',
-            5: 'very long hair waist-length cascading'
-        };
-        parts.push(hairLengths[hairLength as keyof typeof hairLengths]);
-
-        return parts.join(' ');
-    };
 
     const { state: progressState, startMonitoring, reset: resetProgress } = useComfyProgress();
 
@@ -141,7 +60,7 @@ export default function ImageGenerator({
             return;
         }
 
-        const fullPromptText = `${getAppearanceFromSliders()}, ${appearance ? appearance + ', ' : ''}${prompt.trim()}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`;
+        const fullPromptText = `${appearance ? appearance + ', ' : ''}${prompt.trim()}, hyper-realistic 8K portrait, raw unfiltered photo, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, imperfect skin, natural complexion, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography, distinct facial features`;
 
         const newItem: QueueItem = {
             id: Date.now().toString() + Math.random(),
@@ -149,13 +68,7 @@ export default function ImageGenerator({
             fullPrompt: fullPromptText,
             numImages,
             aspectRatio,
-            age,
-            breastSize,
-            height,
-            bodyType,
-            skinTone,
-            hairColor,
-            hairLength
+
         };
 
         setQueue(prev => [...prev, newItem]);
@@ -182,8 +95,8 @@ export default function ImageGenerator({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     characterSlug,
-                    prompt: `${getAppearanceFromSlidersForItem(item)}, ${appearance ? appearance + ', ' : ''}${item.prompt}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`,
-                    negativePrompt: `ugly, deformed, blurry, low quality, no plastic skin, no beauty filters, no over-smooth retouching, no deformed face, no bad anatomy, no extra fingers, no asymmetrical eyes, no cross-eyed gaze, no watermark, no text, no logo, no low-res, no blur`,
+                    prompt: item.fullPrompt,
+                    negativePrompt: `ugly, deformed, blurry, low quality, plastic skin, doll-like, airbrushed, over-smoothed, CGI, 3D render, cartoon, anime, illustration, painting, drawing, bad anatomy, extra fingers, asymmetrical eyes, cross-eyed, watermark, text, logo, low-res, blur, artificial lighting, oversaturated`,
                     numImages: item.numImages,
                     loraPath,
                     aspectRatio: item.aspectRatio,
@@ -238,68 +151,7 @@ export default function ImageGenerator({
             .catch(e => console.error('❌ Failed to interrupt ComfyUI:', e));
     };
 
-    // Helper to get appearance from queue item
-    const getAppearanceFromSlidersForItem = (item: QueueItem) => {
-        const parts = [];
-        parts.push(`${item.age} years old`);
 
-        const breastSizes = {
-            1: 'completely flat chest athletic tomboy physique',
-            2: 'petite perky A-cup breasts small delicate',
-            3: 'modest natural B-cup breasts perfect proportions',
-            4: 'medium shapely C-cup breasts feminine curves',
-            5: 'full voluptuous breasts ample cleavage',
-            6: 'large D-cup breasts generous bustline'
-        };
-        parts.push(breastSizes[item.breastSize as keyof typeof breastSizes]);
-
-        const heights = {
-            1: '150cm very petite small frame delicate',
-            2: '160cm petite slender build',
-            3: '168cm average height well-proportioned',
-            4: '175cm tall statuesque leggy',
-            5: '180cm very tall model height long legs'
-        };
-        parts.push(heights[item.height as keyof typeof heights]);
-
-        const bodyTypes = {
-            slim: 'slim slender lean physique toned',
-            athletic: 'athletic fit toned defined muscles gym body',
-            curvy: 'curvy hourglass figure feminine soft curves',
-            thick: 'thick voluptuous plush body thicc'
-        };
-        parts.push(bodyTypes[item.bodyType as keyof typeof bodyTypes]);
-
-        const skinTones = {
-            pale: 'porcelain pale skin ivory complexion',
-            fair: 'fair skin natural light complexion',
-            tan: 'sun-kissed tan skin golden glow',
-            olive: 'olive skin Mediterranean complexion',
-            brown: 'brown skin rich caramel tone',
-            deep: 'deep dark skin ebony complexion'
-        };
-        parts.push(skinTones[item.skinTone as keyof typeof skinTones]);
-
-        const hairColors = {
-            blonde: 'blonde hair golden locks',
-            brunette: 'brunette hair chestnut brown',
-            black: 'black hair raven dark',
-            red: 'red hair fiery ginger',
-            auburn: 'auburn hair copper highlights'
-        };
-        parts.push(hairColors[item.hairColor as keyof typeof hairColors]);
-
-        const hairLengths = {
-            1: 'pixie cut short cropped hair',
-            2: 'short hair chin-length bob',
-            3: 'shoulder-length hair medium',
-            4: 'long hair flowing past shoulders',
-            5: 'very long hair waist-length cascading'
-        };
-        parts.push(hairLengths[item.hairLength as keyof typeof hairLengths]);
-
-        return parts.join(' ');
-    };
 
     // Start queue processing when items are added
     useEffect(() => {
@@ -327,7 +179,7 @@ export default function ImageGenerator({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     characterSlug,
-                    prompt: `${getAppearanceFromSliders()}, ${appearance ? appearance + ', ' : ''}${prompt}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`,
+                    prompt: `${appearance ? appearance + ', ' : ''}${prompt}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`,
                     negativePrompt: `ugly, deformed, blurry, low quality, no plastic skin, no beauty filters, no over-smooth retouching, no deformed face, no bad anatomy, no extra fingers, no asymmetrical eyes, no cross-eyed gaze, no watermark, no text, no logo, no low-res, no blur`,
                     numImages,
                     loraPath,
@@ -346,7 +198,7 @@ export default function ImageGenerator({
             startMonitoring(data.promptId);
 
             // Poll for completion
-            const fullPromptText = `${getAppearanceFromSliders()}, ${appearance ? appearance + ', ' : ''}${prompt}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`;
+            const fullPromptText = `${appearance ? appearance + ', ' : ''}${prompt}, hyper-realistic 8K portrait, natural skin texture with visible pores and fine micro-details, subtle peach-fuzz, realistic subsurface scattering, professional studio lighting, shallow depth of field, razor-sharp eyes, anatomically correct face and body, cinematic editorial photography`;
             pollForCompletion(data.promptId, fullPromptText);
 
         } catch (e) {
@@ -364,15 +216,15 @@ export default function ImageGenerator({
                 const res = await fetch(`/api/comfyui/status/${promptId}`);
                 const data = await res.json();
 
-                if (data.status === 'done' && data.images && data.images.length > 0) {
+                if (data.status === 'success' && data.outputs && data.outputs.length > 0) {
                     // Save images with prompt metadata
-                    const newImagesData: GeneratedImageData[] = data.images.map((url: string) => ({
+                    const newImagesData: GeneratedImageData[] = data.outputs.map((url: string) => ({
                         url,
                         prompt: fullPrompt,
                         timestamp: Date.now()
                     }));
                     setGeneratedImagesData(prev => [...newImagesData, ...prev]);
-                    setGeneratedImages(prev => [...data.images, ...prev]);
+                    setGeneratedImages(prev => [...data.outputs, ...prev]);
                     resetProgress();
 
                     return true;
@@ -545,7 +397,7 @@ export default function ImageGenerator({
                         {/* Lifestyle Prompts Dropdown */}
                         <div>
                             <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#999' }}>
-                                🌟 Lifestyle & Casual
+                                Lifestyle & Casual
                             </label>
                             <select
                                 onChange={(e) => e.target.value && setPrompt(e.target.value)}
@@ -562,30 +414,30 @@ export default function ImageGenerator({
                                 defaultValue=""
                             >
                                 <option value="">Select a lifestyle prompt...</option>
-                                <option value="Young woman stands barefoot on cool bathroom tiles holding her iPhone in her right hand at chest height capturing her reflection in the slightly steamed-up mirror above the sink wearing an oversized vintage band t-shirt pale gray color that's three sizes too big slipping casually off her left shoulder revealing smooth collarbone and delicate freckles across her chest left hand rests lightly on the sink edge for balance messy blonde hair still tousled from sleep with natural beach waves framing her face tilts her head 15 degrees to the right biting her lower lip gently with a sleepy yet flirty half-smile morning light streams through frosted window behind her creating perfect backlighting that catches tiny steam particles floating in air counter cluttered with skincare products toothbrush electric toothbrush head makeup brush morning routine authenticity bathroom walls soft mint green scuffed white floor tiles slightly dirty bathmat crumpled towel hanging rack perfect unposed influencer morning moment captured exactly right before she brushes teeth">🪞 Morning Mirror</option>
-                                <option value="Fresh from swimming laps girl sits on rough concrete pool edge legs dangling in cool blue water wearing simple white triangle bikini top tied behind neck back perfect tan lines visible shoulders water droplets slowly roll down collarbone between breasts onto stomach sparkling sunlight she pushes wet dark hair back both hands laughing genuine joy head thrown slightly back exposing neck jewelry friend snaps candid iPhone photo from poolside golden sunlight creates perfect rim lighting around silhouette palm tree shadows dance across concrete deck behind her faded striped pool towel folded nearby empty plastic water bottle condensation dripping lounge chair umbrella casting shade colorful striped towel perfect tropical vacation friendship moment captured mid-laugh chlorine smell sunscreen scent palpable">🌊 Poolside Swim</option>
-                                <option value="Striding confidently down busy downtown sidewalk woman AirPods Pro wireless earbuds both ears laughing animatedly phone conversation wearing cropped black leather jacket unzipped just enough show white lace bralette straps underneath high-waisted dark wash mom jeans hugging curves late afternoon golden hour light hits face perfectly casting long shadow across wet pavement ahead neon coffee shop signs reflect puddles she passes street vendor hot dog cart parked cars double-parked glance briefly camera mid-stride stride purposeful casual stride turns head slightly catch friend's eye perfect urban working girl caught living moment city pulse palpable">🏙️ City Phone Call</option>
-                                <option value="Sitting cross-legged unmade queen bed covered tangled white sheets duvet half fallen floor young woman stretches arms overhead genuine yawn sleepy smile exposes perfect teeth oversized boyfriend t-shirt heather gray slips dramatically off right shoulder revealing smooth shoulder blade mole freckles across upper chest holding steaming ceramic coffee mug both hands white stoneware steam rising curls around face morning sunlight filters through sheer white curtains creating perfect softbox effect dust motes dance sunbeams hardwood floor scattered with yesterday's clothes sneakers one sock crumpled rug perfect cozy authentic bedroom morning routine moment captured mid-stretch right before first sip coffee">😴 Bedroom Stretch</option>
-                                <option value="Perfectly positioned café window seat woman leans chin left hand gazing thoughtfully street outside sipping iced coffee caramel-colored condensation drips tall glass straw between glossy lips wearing cream cable-knit sweater oversized showing delicate collarbones thin gold necklace 14k chain tiny diamond pendant catches perfect light laptop open screen glows illuminates focused face colorful pastries croissant flakes plate beside scattered laptop stickers morning work-from-anywhere aesthetic pedestrians blur past window bokeh effect street signs bikes parked perfect creative morning moment captured mid-thought">☕ Café Window</option>
-                                <option value="Leaning halfway out passenger window speeding 75mph highway golden hour woman hair wildly blowing every direction aviator sunglasses pushed up forehead strands stick sweaty forehead black leather jacket unzipped halfway white lace bralette visible underneath arms crossed casually on door frame dashboard glows orange sunset highway streaks motion blur background empty Starbucks cup rolling floor perfect road trip spontaneous friendship moment mouth open mid-laugh teeth perfect freedom joy palpable wind noise deafening">🚗 Road Trip Wind</option>
-                                <option value="High-angle shot gym rubberized floor woman sits cross-legged blue Nalgene water bottle tilted mouth sweat beads forehead drips collarbone cropped neon green sports bra perfect tan lines high-waist black biker shorts rolled once genuine tired-happy smile looking camera hair messy sweat-soaked ponytail pieces stick neck gym equipment racks mirrors reflect background other gym-goers blurred motion water bottle condensation drips thigh authentic fitness journey moment captured mid-hydration breath ragged perfect unfiltered post-workout reality">💪 Gym Water Break</option>
-                                <option value="Perched bare feet dangling kitchen marble countertop woman swings legs playfully holding oversized ceramic coffee mug forest green both hands steam rises curls around face tiny spaghetti strap white tank top slips slightly both shoulders exposing smooth skin morning sleepy sexy smile natural no-makeup glow perfect skin texture visible pores messy brunette hair claw clip half-falling out marble counters gleaming sunlit white cabinets open baguette plate scattered avocado toast crumbs perfect morning routine domestic bliss moment captured mid-sip right counter sits toaster knife smeared avocado">🥑 Kitchen Counter</option>
-                                <option value="Tight mirrored elevator woman 30 seconds big meeting quickly checks appearance tailored black blazer unbuttoned two buttons revealing cream lace camisole pencil skirt high slit red matte lip power pose gold hoop earrings catch elevator light reflection shows slight nerves mixed determination perfect working woman moment microbladed brows perfect winged eyeliner elevator buttons illuminate floor numbers ding sounds arrival perfect poised professional moment captured breath held">💼 Elevator Power</option>
-                                <option value="Park wooden bench surrounded vibrant fallen orange yellow leaves woman curled fetal position chunky oatmeal knit sweater rust-colored scarf wrapped twice reading dog-eared paperback romance novel open lap autumn golden hour sunlight filters bare tree branches hair catches soft breeze few strands cross eyes soft peaceful expression completely absorbed story cozy fall moment captured mid-page turn crisp air leaf crunch palpable perfect seasonal friendship candid">🍂 Park Reading</option>
-                                <option value="Rooftop ledge 20th floor golden hour woman flowy bias-cut satin slip dress ivory color wind dramatically catches fabric billows around legs hair wildly tousled perfect mess peaceful horizon gaze twinkling city skyline glows orange pink purple perfect rim lighting contours face shoulders collarbones high-fashion editorial portrait natural perfect skin golden light creates perfect god rays between skyscrapers serene influencer moment captured mid-breath wind whipping perfect cinematic perfection">🌆 Rooftop Sunset</option>
-                                <option value="Leaning cluttered IKEA desk studying woman pushes black-rimmed glasses up nose tired determination smile micro expression shows focus messy claw clip holds chestnut hair back loose strands frame face cropped sage green sweater shows toned forearms scattered textbooks highlighters sticky notes laptop screen glows Discord open professor email inbox overflowing late night student life perfect grit moment captured mid-equation solve">📚 Late Night Study</option>
-                                <option value="Fresh ocean waves petite woman sits colorful Mexican beach towel loosely wrapped around hips water still dripping hair shoulders simple triangle bikini top perfect tan lines visible finger-combing wet dark hair natural laugh squeezing excess water ocean waves crash white foam behind golden sand footprints lead water scattered seashells perfect beach candid friendship moment sunscreen scent salt air palpable perfect tropical escape">🏖️ Beach Towel</option>
-                                <option value="Descending sweeping marble staircase woman holds polished wood railing confident purposeful stride flowy silk charcoal skirt cropped fitted cream blouse hair bounces perfectly each step golden hoop earrings sway catch dramatic overhead lighting shadows play marble steps high-fashion runway moment captured mid-stride poised perfection">👠 Staircase Descend</option>
-                                <option value="Curled living room gray velvet sofa woman reads iPad propped pillows wearing ivory cashmere sweater thigh-high fuzzy socks cozy weekend pose afternoon sunlight filters sheer linen curtains soft shadows across face peaceful content expression perfect lazy Sunday aesthetic scattered throw pillows knit blanket half-fallen floor">🛋️ Sofa Weekend</option>
-                                <option value="Urban street corner Friday night woman laughs covering mouth hand caught completely off guard perfect candid moment black leather jacket ripped black mom jeans chunky black combat boots neon bar signs reflect wet pavement spontaneous friendship photo perfect urban nightlife vibe pure joy infectious">🌃 Street Laugh</option>
-                                <option value="Bathroom double sink woman morning skincare routine silk kimono robe dusty rose slips both shoulders exposing smooth upper back messy claw clip holds hair natural morning glow skincare products elegantly arranged marble counter mirror reflection shows perfect routine morning prep authentic influencer content captured mid-serum application">🧴 Skincare Ritual</option>
-                                <option value="Music festival third night woman sits friendship circle glitter strategically dusted shoulders collarbones iridescent holographic crop top olive green cargo skirt black platform combat boots temporary metallic star tattoos sparkle excited festival energy colorful beaded wristbands glow sticks litter ground perfect festival candid electric atmosphere palpable">🎪 Festival Energy</option>
-                                <option value="Highway 70mph golden hour woman takes selfie left hand wireless earbuds right hand iPhone perfect angle tousled caramel hair aviators perched perfect nose cropped black leather jacket white ribbed tank dashboard glows orange perfect road trip adventure aesthetic candid spontaneous moment pure freedom">🌅 Driving Sunset</option>
-                                <option value="Café window perfect seat woman captured street photographer sunlight glows perfectly through glass iced latte condensation drips tall glass reading glasses perched nose chunky cream sweater collarbones peek laptop open scattered colorful pastries pedestrians perfectly blur street background morning work aesthetic pure creative magic">☕ Café Creative</option>
-                                <option value="Lying stomach-down bed woman scrolls TikTok oversized heather gray t-shirt rides slightly bare legs crossed air late night bedroom glow iPhone screen perfectly illuminates face casual relaxed position perfect bedtime scroll moment tangled white sheets glow-in-dark star stickers ceiling perfect unfiltered bedtime ritual">📱 Phone Scroll</option>
-                                <option value="Childhood park metal swing woman gently swings forward hair catches perfect breeze flowy cream sundress golden hour park trees perfectly blur background peaceful content expression grown-up childhood moment captured mid-swing pure nostalgic joy perfect friendship candid">🌳 Park Swing</option>
-                                <option value="Kitchen island spontaneous dance woman holds wooden spoon microphone singing passionately Taylor Swift cropped black tank gray boxer shorts barefoot genuine joyful laugh messy morning hair morning music moment perfect relatable content marble counters sunlit cabinets perfect domestic bliss captured mid-chorus">🎵 Kitchen Dance</option>
-                                <option value="Balcony wrought-iron railing morning coffee woman leans forward oversized ivory sweater steaming white stoneware mug both hands city waking below soft morning haze distant traffic hum hair messy natural peaceful start day moment perfect urban morning aesthetic perfect influencer serenity captured mid-breath steam rises perfect">🌇 Balcony Coffee</option>
+                                <option value="Young woman standing barefoot on bathroom tiles holding iPhone, distorted reflection in steamed-up mirror, wearing oversized vintage gray band t-shirt slipping off shoulder, messy blonde loose waves, biting lower lip, morning light through frosted window">🪞 Morning Mirror</option>
+                                <option value="Sitting on concrete pool edge legs dangling in blue water, white triangle bikini top, tan lines, wet dark hair slicked back, laughing, golden sunlight rim lighting, palm tree shadows on deck, colorful towel nearby">🌊 Poolside Swim</option>
+                                <option value="Walking down city sidewalk wearing AirPods, cropped black leather jacket, high-waisted mom jeans, late afternoon golden hour light, neon coffee shop signs, neon reflections in wet pavement, urban street background">🏙️ City Phone Call</option>
+                                <option value="Sitting cross-legged on unmade bed, tangled white sheets, stretching arms overhead, yawning, wearing oversized gray heather t-shirt slipping off shoulder, steaming coffee mug in hand, morning sunlight through sheer curtains">😴 Bedroom Stretch</option>
+                                <option value="Sitting at café window gazing out, sipping iced coffee, wearing cream cable-knit sweater, thin gold necklace, laptop open on table, croissant on plate, street reflection in glass, bokeh street background">☕ Café Window</option>
+                                <option value="Leaning out passenger car window, wind blowing hair, aviator sunglasses on forehead, black leather jacket, white lace bralette, sunset highway background, motion blur, laughing freedom moment">🚗 Road Trip Wind</option>
+                                <option value="Sitting on gym floor cross-legged, holding blue water bottle, wearing neon green sports bra and black biker shorts, sweat on skin, messy high ponytail, gym equipment background, post-workout glow">💪 Gym Water Break</option>
+                                <option value="Sitting on kitchen counter legs swinging, holding coffee mug, wearing white spaghetti strap tank top, messy hair claw clip, marble countertops, morning sunlight, sunlit white cabinets">🥑 Kitchen Counter</option>
+                                <option value="Standing in mirrored elevator adjusting blazer, black tailored jacket, cream lace camisole, pencil skirt, red matte lips, gold hoop earrings, elevator floor numbers illuminated, confident pose">💼 Elevator Power</option>
+                                <option value="Curled up on park bench, autumn leaves background, chunky oatmeal knit sweater, rust scarf, reading paperback novel, golden hour light, peaceful expression, crisp fall air atmosphere">🍂 Park Reading</option>
+                                <option value="Standing on rooftop ledge, cityscape skyline background, ivory satin slip dress blowing in wind, tousled hair, sunset golden light rim lighting, high-fashion editorial look">🌆 Rooftop Sunset</option>
+                                <option value="Leaning over cluttered desk studying, wearing glasses and sage green sweater, messy bun, textbooks and laptop, late night study lamp lighting, focused expression">📚 Late Night Study</option>
+                                <option value="Sitting on beach towel, colorful mexican blanket, white bikini top, wet hair, ocean waves crashing background, golden sand, seashells, sunny tropical beach atmosphere">🏖️ Beach Towel</option>
+                                <option value="Walking down marble staircase, hand on railing, charcoal silk skirt, cream blouse, confident stride, grand foyer background, dramatic overhead lighting">👠 Staircase Descend</option>
+                                <option value="Curled on gray velvet sofa reading iPad, ivory cashmere sweater, thigh-high socks, cozy mood, afternoon light through curtains, textured scatter pillows">🛋️ Sofa Weekend</option>
+                                <option value="Standing on urban street corner laughing, black leather jacket, ripped jeans, combat boots, neon bar signs night background, candid nightlife atmosphere">🌃 Street Laugh</option>
+                                <option value="Standing at bathroom double sink, wearing dusty rose silk kimono robe, applying skincare serum, messy hair clip, marble counter, mirror reflection, morning routine">🧴 Skincare Ritual</option>
+                                <option value="Sitting in circle on grass at music festival, glitter on shoulders, iridescent crop top, cargo skirt, platform boots, glow sticks, festival lights background, night atmosphere">🎪 Festival Energy</option>
+                                <option value="Driving car at sunset, taking selfie, avaiator sunglasses, leather jacket, white tank top, windblown hair, dashboard lights, golden hour road trip aesthetic">🌅 Driving Sunset</option>
+                                <option value="Sitting at café window table, iced latte, cream sweater, reading glasses, laptop, street view through glass, morning coffee shop ambiance, natural lighting">☕ Café Creative</option>
+                                <option value="Lying stomach-down on bed scrolling phone, oversized gray t-shirt, bare legs, night mode screen glow on face, dark bedroom atmosphere, star stickers on ceiling">📱 Phone Scroll</option>
+                                <option value="Swinging on park swing, flowy cream sundress, golden hour backlight, blurred trees background, hair blowing, nostalgic playful mood">🌳 Park Swing</option>
+                                <option value="Dancing in kitchen holding wooden spoon, black tank top, gray boxer shorts, messy morning hair, marble island, sunlit breakfast scene, candid joy">🎵 Kitchen Dance</option>
+                                <option value="Leaning on balcony railing drinking coffee, oversized ivory sweater, city morning haze background, messy hair, urban sunrise view, peaceful morning moment">🌇 Balcony Coffee</option>
                             </select>
                         </div>
 
@@ -656,199 +508,35 @@ export default function ImageGenerator({
                                 defaultValue=""
                             >
                                 <option value="">Select explicit prompt...</option>
-                                <option value="Kneeling center unmade king bed facing camera completely naked entirely nude bare skin glowing soft morning sunlight streams floor-to-ceiling windows behind woman sits back on heels knees spread shoulder-width apart hands rest on thighs palms up vulnerable open confident pose full frontal nudity visible smooth bare breasts natural hang perfect proportions pink nipples erect from cool morning air flat toned stomach visible hip bones defined thighs soft inner thigh gap pussy completely visible smooth waxed bare vulva lips slightly parted morning light catches every curve shadow definition between legs messy blonde bedhead hair cascades shoulders frames face direct eye contact camera sultry confident expression slight smile knows exactly how beautiful she looks white cotton sheets tangled around scattered pillows hardwood floor visible luxury bedroom intimate private moment pure vulnerability confidence radiates girlfriend morning naked confidence">💎 Kneeling Bed Nude</option>
-                                <option value="Standing full-length bedroom mirror completely naked taking mirror selfie iPhone held chest height woman views own reflection admiring body turning slightly three-quarter angle showing curves side profile breast visible round shape nipple pointing forward smooth bare stomach flat toned abs visible belly button hip curve sweeps down to completely bare pussy smooth waxed skin vulva visible from angle inner thigh gap one leg slightly bent knee casual confident model pose other hand rests on hip natural casual nude mirror moment messy hair loose natural no makeup fresh faced beauty bedroom visible background reflection clothes scattered floor intimate personal nude selfie moment girlfriend confident body appreciation checking herself out completely comfortable own skin perfect lighting catches every curve definition shadows enhance muscle tone athletic physique captured exactly right angle">🪞 Naked Mirror Selfie</option>
-                                <option value="Lying on back across bed diagonal completely naked arms stretched overhead arching back naturally breasts point upward nipples erect perfect round shape smooth skin glowing natural window light woman stretches genuine morning yawn eyes closed peaceful sleepy smile legs slightly apart bent at knees feet flat on mattress completely bare pussy visible between thighs smooth waxed vulva lips full morning light streams across body highlighting every curve casting soft shadows under breasts along ribcage defining hip bones white cotton sheets tangled around waist bunched beside scattered pillows messy blonde hair spread across pillow intimate genuine waking moment completely nude natural unposed authentic naked morning stretch girlfriend waking up lazy Sunday morning pure vulnerability peaceful beauty captured mid-yawn right before she opens eyes sees camera">🌅 Naked Morning Stretch</option>
-                                <option value="Shower glass door steamed woman stands under rainfall showerhead hot water cascades down body completely naked wet skin glistening water droplets roll down breasts over nipples down flat stomach between legs hands run through soaked hair slicking back from face eyes closed peaceful expression enjoying hot water massage bare breasts wet shine water streams between cleavage over smooth waxed pussy visible through steam glass door reflection shows side profile hip curve round buttocks cheeks wet modern marble shower luxury bathroom steam fills air intimate private shower moment girlfriend bathing unaware captured authentic vulnerability washing hair completely naked natural beauty water enhances every curve muscle definition athletic body perfect proportions captured through steamy glass artistic intimate">🚿 Steamy Shower Nude</option>
-                                <option value="Sitting edge outdoor infinity pool complete silence sunrise water perfectly still reflecting pink sky completely naked bare breasts visible natural hang nipples point forward from cool morning air legs dangle in crystal clear water to mid-thigh bare smooth waxed pussy partially visible angle between thighs hands grip pool edge beside hips leaning back slightly pushing chest forward confident peaceful expression gazing at sunrise horizon glow wet hair slicked back from recent swim water droplets glisten on skin catching first light exotic hardwood pool deck luxury villa background palm trees silhouette against pink orange sky intimate vacation morning moment skinny dipping sunrise complete freedom vulnerability stunning natural beauty naked confident woman alone with nature perfect paradise instant">🌊 Poolside Naked Dawn</option>
-                                <option value="Bent over bathroom vanity washing face completely naked leaning forward at waist bare round buttocks prominently displayed toward camera perfect athletic tight cheeks smooth spray tanned skin between buttocks completely visible smooth waxed asshole hint visible from bent position inner thighs gap shows pussy lips from behind angle hanging bare breasts visible from side droop naturally from gravity nipples pointing downward hands cupped under running faucet water splashing face looking down at sink messy morning hair falls forward bathroom mirror shows reflection concentrated expression washing routine natural morning light from window intimate private bathroom moment girlfriend getting ready completely comfortable being naked casual domestic nudity authentic unposed captured from behind doorway angle watching her morning routine vulnerable beautiful">🛁 Bent Washing Face</option>
-                                <option value="Lying stomach-down bed reading phone propped on elbows completely naked bare back smooth shoulder blades defined athletic build tapering to narrow waist round perfect buttocks cheeks prominently displayed smooth spray-tanned skin tight athletic curves small back dimples visible above glutes legs bent at knees feet crossed in air swaying playfully completely bare ass front and center innerbutt curve visible where cheeks meet thighs smooth waxed asshole hint between cheeks messy brunette hair falls to side focused on phone screen scrolling casual relaxed bedroom afternoon sunlight streams across naked body laptop open beside showing Netflix book spine-broken beside perfect lazy naked afternoon moment girlfriend lounging completely nude comfortable own skin captured from foot of bed angle perfect ass view intimate domestic nudity">🍑 Naked Phone Browsing</option>
-                                <option value="Squatting down low picking up dropped earring from hardwood floor completely naked legs spread wide squat position bare pussy completely visible full frontal vulva lips slightly spread from squatting position smooth waxed skin pink inner lips hint visible clit hood peek between folds thighs spread apart knees out to sides bare breasts hang naturally from bent forward position nipples pointing downward one hand reaches floor searching other hand steadies balance against dresser focused expression looking down searching for lost item completely unaware how exposed vulnerable position displays everything messy blonde hair falls forward morning bedroom scene casual domestic nudity authentic moment girlfriend searching for jewelry completely naked natural unposed captured exactly moment she squats down perfect explicit angle shows everything">🔍 Squatting Pick Up</option>
-                                <option value="On hands and knees bed crawling forward toward camera playful seductive expression completely naked bare breasts hanging naturally from gravity position nipples erect point downward perfect round shape smooth stomach visible hanging between arms back slightly arched ass elevated behind round buttocks cheeks spread slightly from crawling position smooth spray-tanned skin pussy visible from behind angle vulva lips full smooth waxed between thighs inner thigh gap frame view messy tousled sex hair cascades shoulders direct eye contact camera sultry playful look biting lower lip crawling predator-like toward viewer white cotton sheets tangled beneath hands knees bedroom sexy playful moment girlfriend teasing crawling across bed completely naked confident seductive energy radiates perfect angle captures hanging breasts and ass simultaneously">🐆 Crawling Toward Camera</option>
-                                <option value="Seated floor against wall legs spread wide V-shape completely naked displaying everything full frontal nudity bare breasts rest naturally on chest nipples point forward pink erect smooth flat stomach belly button visible between spread thighs pussy completely on display smooth waxed vulva lips slightly parted pink inner lips visible clit hood peek between folds hands rest on floor beside hips palms down leaning back against wall casual confident open pose direct eye contact camera sultry knowing smile messy bedroom hair natural no-makeup beauty hardwood floor cool against bare ass bedroom wall behind afternoon sunlight streams window catches every detail intimate private moment girlfriend sitting naked floor completely open vulnerable confident showing everything perfect explicit display confidence vulnerability simultaneously">📐 Spread Floor Sitting</option>
-                                <option value="Bending forward touching toes yoga stretch completely naked standing bedroom bare round buttocks elevated toward camera tight athletic cheeks smooth spray-tanned skin spread slightly from bent position smooth waxed asshole visible between cheeks pussy lips visible from behind angle vulva full smooth between inner thighs bare back straight shoulder blades defined arms reach down long legs straight knees locked hamstrings stretched fingers touch toes athletic flexibility displayed head down between legs looking back through legs upside down at camera playful smile hair hangs down toward floor morning bedroom stretch routine completely naked casual domestic nudity girlfriend morning yoga nude perfect ass display from behind captured mid-stretch athletic body beautiful curves">🧘 Naked Toe Touch</option>
-                                <option value="Reclining bathtub filled clear water submerged to collarbone completely naked underwater bare breasts float naturally in water nipples visible through crystal clear surface one leg raised bent knee foot rests on tub edge elevated above waterline smooth bare pussy visible on raised leg vulva lips smooth waxed glistening wet other leg stretched along tub bottom arms rest along porcelain edges head tilted back against tub rim eyes closed peaceful relaxed expression wet hair slicked back from face rose petals float water surface around scattered candles flicker marble bathroom counter wine glass balanced tub edge intimate evening bath moment girlfriend relaxing completely nude artistic candlelit beauty water enhances curves perfect serene vulnerability">🛁 Nude Bath Leg Up</option>
-                                <option value="Standing tippy-toes reaching high closet shelf back fully arched from reaching stretch completely naked bare round buttocks tight athletic cheeks smooth spray-tanned perfect curve visible from behind side angle smooth waxed asshole hint between cheeks pussy lips visible from behind between inner thighs one arm stretched overhead reaching other arm steadies against doorframe breasts lifted from raised arms nipples point forward side profile visible narrow waist athletic build messy morning hair loose natural bedroom closet scene casual domestic moment getting dressed choosing outfit completely naked comfortable being nude unaware how perfectly pose displays curves ass pussy breasts all visible from angle morning natural light authentic girlfriend getting ready captured mid-reach vulnerable beautiful athletic body">👗 Naked Closet Reach</option>
-                                <option value="Lying on side bed facing camera head propped on hand elbow supporting completely naked top leg bent knee raised toward chest opening hips displaying bare pussy completely visible from front angle smooth waxed vulva lips full pink inner lips slightly visible clit hood peek between folds bottom leg stretched straight behind top bare breast rests naturally on ribcage nipple erect points forward perfect round shape smooth flat stomach visible hip curve defined waist narrow athletic messy sex hair tousled cascades pillow sultry bedroom eyes direct camera contact slight knowing smile white sheets tangled around intimate bedroom afternoon moment girlfriend posing naked confident seductive knows exactly what she showing perfect gynecological angle displays everything">💋 Side Lying Display</option>
-                                <option value="Sitting cross-legged floor laptop on lap working completely naked bare breasts visible natural sit position nipples soft relaxed perfect round proportions smooth legs crossed pretzel-style pussy completely hidden by crossed legs position focused expression looking down at laptop screen typing concentrated work mode messy bun hair claw-clipped natural no-makeup face afternoon sunlight streams nearby window catches skin glow hardwood floor cool beneath bare ass scattered notebooks pens coffee mug beside working from home completely nude casual comfortable domestic nudity girlfriend productive naked laptop work moment authentic concentrated focus beautiful casual nudity captured working hard completely comfortable own naked body">💻 Naked Laptop Work</option>
-                                <option value="Hands and knees floor cleaning up scattered clothes completely naked bare round buttocks elevated toward camera tight athletic ass cheeks smooth spray-tanned skin spread slightly from bent position smooth waxed asshole visible between cheeks pussy lips visible from behind angle hanging bare breasts visible from side droop naturally from gravity nipples point downward reaching hand picking up shirt from floor other hand planted floor supporting focused on cleaning task unaware how exposed vulnerable position head down looking at mess messy hair falls forward bedroom scene clothes scattered authentic domestic moment girlfriend cleaning room completely naked casual comfortable nudity captured from behind perfect explicit rear view">🧹 Naked Floor Cleanup</option>
-                                <option value="Straddling chair backward arms crossed resting on chair back completely naked facing camera bare breasts rest on crossed forearms nipples slightly visible peek over arms smooth flat stomach belly button visible sitting spread-legged on chair seat bare pussy pressed against chair leather visible vulva lips spread slightly from sitting position inner thighs frame seat direct eye contact camera sultry confident expression messy bedroom hair natural beauty bedroom chair scene intimate private moment girlfriend posing naked on chair confident seductive backward straddle position shows curves breasts pussy all visible perfect confident pose">🪑 Naked Chair Straddle</option>
-                                <option value="Arching back extreme yoga bridge pose completely naked bedroom floor hands feet planted floor hips thrust upward toward ceiling bare chest thrust forward breasts point toward face gravity pulls natural shape nipples point backward smooth flat stomach arched concave ribcage visible between raised arms bare pussy elevated on display smooth waxed vulva lips visible from below angle thighs spread apart supporting position athletic flexibility displayed extreme back arch yoga mat beneath bedroom scene morning yoga routine completely naked casual domestic nudity girlfriend practicing nude beautiful athletic flexibility intimate moment captured mid-pose vulnerable beautiful strong">🤸 Naked Bridge Arch</option>
-                                <option value="Emerging from pool climbing ladder water streams down body completely naked wet skin glistening sunlight bare breasts hang naturally water drips from nipples down stomach smooth waxed pussy visible between thighs water cascades down legs hands grip chrome pool ladder rails pulling body up from water one foot on ladder rung other still in water head tilted back slicking wet hair from face eyes closed water droplets catch sunlight exotic pool deck luxury villa palm trees background intimate vacation moment skinny dipping emerging from swim completely nude confident beautiful water enhances every curve muscle definition perfect athletic body wet goddess emerging">🏊 Pool Ladder Emerge</option>
-                                <option value="Face-down massage table completely naked bare back smooth shoulder blades visible spine depression runs down center round buttocks cheeks smooth spray-tanned perfect curves legs slightly spread bare pussy hint visible between inner thighs from behind angle arms folded under head turned to side restful peaceful expression eyes closed relaxed face hole in massage table white towel folded beneath hips massage oil bottle beside flickering candles soft lighting luxury spa setting intimate massage moment girlfriend relaxing completely nude beautiful vulnerable peaceful captured from foot of table angle perfect ass curves back definition serene beauty">💆 Naked Massage Table</option>
-                                <option value="Sitting bathtub edge legs hanging over side into water completely naked dripping wet having just stood up from bath bare breasts wet shine water droplets roll down between cleavage over nipples down smooth stomach bare pussy visible between slightly parted thighs smooth waxed vulva glistening wet hands grip porcelain tub edge beside hips steadying balance water drips from body creating puddles on marble floor wet hair plastered against shoulders back bathroom steamed mirror reflection visible behind rose petals float bath water candles flicker counter intimate evening moment girlfriend mid-bath standing up completely nude wet beautiful captured transitioning from bath">🛁 Bathtub Edge Sitting</option>
-                                <option value="Lying diagonal across bed one leg raised straight up vertical toe pointed toward ceiling completely naked holding raised ankle with both hands stretching hamstring bare pussy completely visible displayed between spread legs smooth waxed vulva lips full slightly parted from stretched position pink inner lips hint visible other leg stretched flat on bed bare breasts rest naturally on chest nipples point upward playful smile looking up at raised leg athletic flexibility morning bedroom stretch routine completely naked casual domestic nudity girlfriend stretching nude perfect explicit gymnastic pose displays everything beautiful athletic confident">🦵 Vertical Leg Stretch</option>
-                                <option value="Standing floor-to-ceiling window naked back to camera looking out city view completely nude bare smooth back visible shoulder blades defined curving down to narrow waist round perfect buttocks cheeks tight athletic smooth spray-tanned bare legs straight posture strong confident one hand touches window glass cool against palm other hand rests on hip casual confident stance morning cityscape twenty floors below golden hour sunlight streams through window backlights naked silhouette rim lighting glows around body edges hair loose messy intimate private moment woman alone with thoughts naked powerful vulnerable beautiful contemplating sunrise perfect artistic nude silhouette vulnerability strength simultaneously radiate">🌇 Window Naked Silhouette</option>
-                                <option value="Bending over picking up towel from floor bedroom completely naked bent at waist ninety degrees bare round buttocks elevated toward camera prominently displayed tight athletic ass cheeks smooth spray-tanned skin spread wide from bent position smooth waxed asshole completely visible between parted cheeks pussy lips visible hanging down from behind gravity pulls vulva full smooth inner pink lips hint visible between folds legs straight knees locked hamstrings stretched reaching arms toward floor grabbing white towel bare breasts hanging down from gravity nipples point toward floor head down hair falls forward completely unaware how explicitly exposed position messy bedroom scene authentic domestic moment girlfriend bending over completely naked casual nudity perfect explicit rear display">🧺 Naked Towel Pickup</option>
+                                <option value="Kneeling on unmade king bed facing camera, completely nude, bare skin glowing, soft morning sunlight through floor-to-ceiling windows, hands on thighs, palms up, full frontal nudity, smooth breasts, erect pink nipples, flat toned stomach, hip bones defined, soft inner thigh gap, pussy visible, smooth waxed vulva, messy blonde bedhead hair">💎 Kneeling Bed Nude</option>
+                                <option value="Standing full-length bedroom mirror selfie, holding iPhone chest height, completely naked, three-quarter angle, breast visible round shape, nipple pointing forward, smooth bare stomach, flat toned abs, belly button, hip curve, bare pussy, smooth waxed skin, inner thigh gap, messy hair loose natural">🪞 Naked Mirror Selfie</option>
+                                <option value="Lying on back across bed diagonal, straight overhead stretch, arching back, breasts point upward, nipples erect, smooth skin glowing, window light, bare pussy visible between thighs, smooth waxed vulva, white cotton sheets tangled, messy blonde hair spread on pillow">🌅 Naked Morning Stretch</option>
+                                <option value="Standing under rainfall showerhead behind steamed glass door, hot water cascading, completely naked, wet skin glistening, water droplets on breasts and nipples, flat stomach, hands in soaked hair, bare breasts wet shine, smooth waxed pussy visible through steam">🚿 Steamy Shower Nude</option>
+                                <option value="Sitting on edge of infinity pool at sunrise, completely naked, bare breasts visible, nipples point forward, legs dangling in water mid-thigh, bare smooth waxed pussy partially visible, hands gripping pool edge, wet hair slicked back, water droplets on skin">🌊 Poolside Naked Dawn</option>
+                                <option value="Bent over bathroom vanity washing face, completely naked, leaning forward at waist, bare round buttocks prominent, tight cheeks, smooth spray tanned skin, smooth waxed asshole visible, inner thighs gap shows pussy lips from behind, hanging bare breasts side view, nipples pointing downward">🛁 Bent Washing Face</option>
+                                <option value="Lying stomach-down on bed reading phone, propped on elbows, completely naked, bare back, smooth shoulder blades, round perfect buttocks cheeks prominent, smooth spray-tanned skin, small back dimples, legs bent at knees, feet crossed in air, bare ass, inner butt curve visible, smooth waxed asshole hint">🍑 Naked Phone Browsing</option>
+                                <option value="Squatting low picking up earring from floor, completely naked, legs spread wide, bare pussy completely visible, full frontal vulva, lips slightly spread, smooth waxed skin, pink inner lips, clit hood peek, bare breasts hang naturally, nipples pointing downward">🔍 Squatting Pick Up</option>
+                                <option value="Crawling forward on hands and knees on bed, completely naked, bare breasts hanging naturally, nipples erect point downward, perfect round shape, stomach visible, back slightly arched, ass elevated behind, round buttocks cheeks spread, smooth spray-tanned skin, pussy visible from behind">🐆 Crawling Toward Camera</option>
+                                <option value="Seated on floor against wall, legs spread wide V-shape, completely naked, full frontal nudity, bare breasts, nipples point forward, smooth flat stomach, pussy completely on display, smooth waxed vulva, lips slightly parted, pink inner lips visible, clit hood peek, hands on floor">📐 Spread Floor Sitting</option>
+                                <option value="Standing touching toes yoga stretch, completely naked, bare round buttocks elevated, tight athletic cheeks, smooth spray-tanned skin, spread slightly, smooth waxed asshole visible, pussy lips visible from behind, vulva full smooth between inner thighs, bare back straight">🧘 Naked Toe Touch</option>
+                                <option value="Reclining in bathtub submerged to collarbone, completely naked underwater, bare breasts float naturally, nipples visible through clear water, one leg raised bent knee on tub edge, smooth bare pussy visible on raised leg, vulva lips smooth waxed glistening wet">🛁 Nude Bath Leg Up</option>
+                                <option value="Standing tippy-toes reaching high closet shelf, back fully arched, completely naked, bare round buttocks, tight athletic cheeks, smooth spray-tanned, smooth waxed asshole hint, pussy lips visible from behind between inner thighs, one arm overhead, side profile visible">👗 Naked Closet Reach</option>
+                                <option value="Lying on side on bed facing camera, head propped on hand, completely naked, top leg bent knee raised, opening hips, bare pussy completely visible, smooth waxed vulva, lips full pink inner lips, clit hood peek, bottom leg straight, top bare breast, nipple erect">💋 Side Lying Display</option>
+                                <option value="Sitting cross-legged on floor with laptop, completely naked, bare breasts visible, nipples soft, smooth legs crossed, pussy hidden by position, focused expression, messy bun, natural no-makeup face, afternoon sunlight">💻 Naked Laptop Work</option>
+                                <option value="On hands and knees cleaning up clothes from floor, completely naked, bare round buttocks elevated, tight athletic ass cheeks, smooth spray-tanned skin, spread slightly, smooth waxed asshole visible, pussy lips visible from behind, hanging bare breasts side view">🧹 Naked Floor Cleanup</option>
+                                <option value="Straddling chair backward, arms crossed on chair back, completely naked facing camera, bare breasts rest on forearms, nipples slightly visible, smooth flat stomach, legs spread, bare pussy pressed against chair, visible vulva lips spread slightly">🪑 Naked Chair Straddle</option>
+                                <option value="Doing yoga bridge pose on floor, arching back, completely naked, hips thrust upward, bare chest thrust forward, breasts point toward face, nipples point backward, smooth flat stomach, bare pussy elevated on display, smooth waxed vulva lips visible">🤸 Naked Bridge Arch</option>
+                                <option value="Climbing out of pool ladder, water streaming down body, completely naked, wet skin glistening, bare breasts hang naturally, water drips from nipples, smooth waxed pussy visible between thighs, hands grip chrome rails, head tilted back">🏊 Pool Ladder Emerge</option>
+                                <option value="Lying face-down on massage table, completely naked, bare back, smooth shoulder blades, round buttocks cheeks, smooth spray-tanned curves, legs slightly spread, bare pussy hint visible between inner thighs from behind, arms folded under head">💆 Naked Massage Table</option>
+                                <option value="Sitting on edge of bathtub, legs hanging over side, completely naked dripping wet, bare breasts wet shine, water droplets, smooth stomach, bare pussy visible between slightly parted thighs, smooth waxed vulva glistening wet, hands grip tub edge">🛁 Bathtub Edge Sitting</option>
+                                <option value="Lying on bed leg raised vertical stretching hamstring, completely naked, holding ankle, bare pussy completely visible between spread legs, smooth waxed vulva lips full slightly parted, pink inner lips, other leg flat, bare breasts rest naturally, nipples point upward">🦵 Vertical Leg Stretch</option>
+                                <option value="Standing at floor-to-ceiling window back to camera, completely nude, bare smooth back, round perfect buttocks cheeks, tight athletic, smooth spray-tanned, bare legs straight, morning cityscape background, silhouette rim lighting">🌇 Window Naked Silhouette</option>
+                                <option value="Bending over picking up towel, completely naked, bent at waist ninety degrees, bare round buttocks elevated, tight athletic ass cheeks, smooth spray-tanned skin, spread wide, smooth waxed asshole completely visible, pussy lips hanging down visible from behind">🧺 Naked Towel Pickup</option>
                             </select>
                         </div>
                     </div>
 
-                    {/* Appearance Customization */}
-                    <div style={{
-                        padding: '16px',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '8px',
-                        marginBottom: '16px'
-                    }}>
-                        <h4 style={{ fontSize: '13px', fontWeight: '600', marginBottom: '12px', color: '#fff' }}>
-                            Appearance Customization
-                        </h4>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 20px' }}>
-                            {/* Age Slider */}
-                            <div>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    <span>👤 Age</span>
-                                    <span style={{ color: '#fff', fontWeight: '600' }}>{age} years</span>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="16"
-                                    max="45"
-                                    value={age}
-                                    onChange={(e) => setAge(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#fff' }}
-                                />
-                            </div>
-
-                            {/* Breast Size Slider */}
-                            <div>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    <span>💎 Breast Size</span>
-                                    <span style={{ color: '#fff', fontWeight: '600' }}>
-                                        {['Flat', 'Petite (A)', 'Modest (B)', 'Medium (C)', 'Full (C+)', 'D-Cup'][breastSize - 1]}
-                                    </span>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="6"
-                                    value={breastSize}
-                                    onChange={(e) => setBreastSize(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#fff' }}
-                                />
-                            </div>
-
-                            {/* Height Slider */}
-                            <div>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    <span>📏 Height</span>
-                                    <span style={{ color: '#fff', fontWeight: '600' }}>
-                                        {['Very Petite (150cm)', 'Petite (160cm)', 'Average (168cm)', 'Tall (175cm)', 'Very Tall (180cm)'][height - 1]}
-                                    </span>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="5"
-                                    value={height}
-                                    onChange={(e) => setHeight(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#ba55d3' }}
-                                />
-                            </div>
-
-                            {/* Hair Length Slider */}
-                            <div>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    <span>💇 Hair Length</span>
-                                    <span style={{ color: '#fff', fontWeight: '600' }}>
-                                        {['Pixie', 'Short', 'Shoulder', 'Long', 'Very Long'][hairLength - 1]}
-                                    </span>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="5"
-                                    value={hairLength}
-                                    onChange={(e) => setHairLength(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#ba55d3' }}
-                                />
-                            </div>
-
-                            {/* Body Type Dropdown */}
-                            <div>
-                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    🏋️ Body Type
-                                </label>
-                                <select
-                                    value={bodyType}
-                                    onChange={(e) => setBodyType(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        background: 'black',
-                                        border: '1px solid #333',
-                                        color: '#fff',
-                                        borderRadius: '6px',
-                                        fontSize: '12px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <option value="slim">Slim & Slender</option>
-                                    <option value="athletic">Athletic & Toned</option>
-                                    <option value="curvy">Curvy & Soft</option>
-                                    <option value="thick">Thick & Voluptuous</option>
-                                </select>
-                            </div>
-
-                            {/* Skin Tone Dropdown */}
-                            <div>
-                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    🎨 Skin Tone
-                                </label>
-                                <select
-                                    value={skinTone}
-                                    onChange={(e) => setSkinTone(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        background: 'black',
-                                        border: '1px solid #333',
-                                        color: '#ba55d3',
-                                        borderRadius: '6px',
-                                        fontSize: '12px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <option value="pale">Porcelain Pale</option>
-                                    <option value="fair">Fair & Natural</option>
-                                    <option value="tan">Sun-Kissed Tan</option>
-                                    <option value="olive">Olive Mediterranean</option>
-                                    <option value="brown">Rich Caramel</option>
-                                    <option value="deep">Deep Ebony</option>
-                                </select>
-                            </div>
-
-                            {/* Hair Color Dropdown */}
-                            <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
-                                    💈 Hair Color
-                                </label>
-                                <select
-                                    value={hairColor}
-                                    onChange={(e) => setHairColor(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '8px',
-                                        background: 'black',
-                                        border: '1px solid #333',
-                                        color: '#ba55d3',
-                                        borderRadius: '6px',
-                                        fontSize: '12px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <option value="blonde">Blonde / Golden</option>
-                                    <option value="brunette">Brunette / Chestnut</option>
-                                    <option value="black">Black / Raven</option>
-                                    <option value="red">Red / Ginger</option>
-                                    <option value="auburn">Auburn / Copper</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
 
                     <textarea
                         value={prompt}
@@ -880,6 +568,45 @@ export default function ImageGenerator({
 
 
 
+
+                {/* Aspect Ratio Selector */}
+                <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#ccc', fontWeight: '600' }}>
+                        Aspect Ratio
+                    </label>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {[
+                            { label: '1:1', value: '1:1' },
+                            { label: '16:9', value: '16:9' },
+                            { label: '9:16', value: '9:16' },
+                            { label: '4:3', value: '4:3' },
+                            { label: '3:4', value: '3:4' },
+                            { label: '3:2 (H)', value: '3:2' },
+                            { label: '2:3 (V)', value: '2:3' }
+                        ].map((option) => (
+                            <button
+                                key={option.value}
+                                onClick={() => setAspectRatio(option.value)}
+                                style={{
+                                    flex: '1 0 14%',
+                                    padding: '8px 4px',
+                                    background: aspectRatio === option.value ? '#0070f3' : '#1a1a1a',
+                                    border: `1px solid ${aspectRatio === option.value ? '#0070f3' : '#333'}`,
+                                    borderRadius: '6px',
+                                    color: 'white',
+                                    fontSize: '11px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    fontWeight: aspectRatio === option.value ? '600' : 'normal',
+                                    boxShadow: aspectRatio === option.value ? '0 2px 4px rgba(0,0,0,0.2)' : 'none',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                {option.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 {/* Number of Images */}
                 <div>
@@ -938,7 +665,7 @@ export default function ImageGenerator({
                 {/* Aspect Ratio Selector */}
                 <div>
                     <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#ccc', fontWeight: '600' }}>
-                        📐 Aspect Ratio
+                        Aspect Ratio
                     </label>
                     <select
                         value={aspectRatio}
@@ -1000,7 +727,7 @@ export default function ImageGenerator({
 
                 {!loraPath && (
                     <p style={{ fontSize: '12px', color: '#f87171', textAlign: 'center' }}>
-                        ⚠️ Please configure a LoRA in Settings first
+                        Please configure a LoRA in Settings first
                     </p>
                 )}
 
@@ -1023,7 +750,7 @@ export default function ImageGenerator({
                                         onClick={cancelQueue}
                                         style={{
                                             padding: '6px 12px',
-                                            background: '#ef4444',
+                                            background: '#333',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '6px',
@@ -1032,7 +759,7 @@ export default function ImageGenerator({
                                             fontWeight: '600'
                                         }}
                                     >
-                                        🛑 Cancel
+                                        Cancel
                                     </button>
                                 )}
                                 <button
@@ -1044,9 +771,9 @@ export default function ImageGenerator({
                                     disabled={isProcessingRef.current}
                                     style={{
                                         padding: '6px 12px',
-                                        background: 'rgba(239, 68, 68, 0.2)',
-                                        color: '#ef4444',
-                                        border: '1px solid #ef4444',
+                                        background: 'transparent',
+                                        color: '#666',
+                                        border: '1px solid #333',
                                         borderRadius: '6px',
                                         cursor: isProcessingRef.current ? 'not-allowed' : 'pointer',
                                         fontSize: '12px',
@@ -1054,7 +781,7 @@ export default function ImageGenerator({
                                         opacity: isProcessingRef.current ? 0.5 : 1
                                     }}
                                 >
-                                    🗑️ Clear Queue
+                                    Clear Queue
                                 </button>
                             </div>
                         </div>
@@ -1065,8 +792,8 @@ export default function ImageGenerator({
                                     key={item.id}
                                     style={{
                                         padding: '12px',
-                                        background: idx === 0 && isProcessingRef.current ? 'rgba(34, 197, 94, 0.1)' : 'rgba(0,0,0,0.3)',
-                                        border: `1px solid ${idx === 0 && isProcessingRef.current ? '#22c55e' : '#333'}`,
+                                        background: idx === 0 && isProcessingRef.current ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,0.3)',
+                                        border: `1px solid ${idx === 0 && isProcessingRef.current ? '#fff' : '#333'}`,
                                         borderRadius: '8px',
                                         position: 'relative'
                                     }}
@@ -1077,12 +804,12 @@ export default function ImageGenerator({
                                                 <span style={{
                                                     fontSize: '11px',
                                                     fontWeight: '700',
-                                                    color: idx === 0 && isProcessingRef.current ? '#22c55e' : '#fff',
-                                                    background: idx === 0 && isProcessingRef.current ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                                                    color: idx === 0 && isProcessingRef.current ? '#fff' : '#fff',
+                                                    background: idx === 0 && isProcessingRef.current ? '#333' : 'rgba(255, 255, 255, 0.1)',
                                                     padding: '4px 8px',
                                                     borderRadius: '4px'
                                                 }}>
-                                                    {idx === 0 && isProcessingRef.current ? '🔄 PROCESSING' : `#${idx + 1}`}
+                                                    {idx === 0 && isProcessingRef.current ? 'PROCESSING' : `#${idx + 1}`}
                                                 </span>
                                                 <span style={{ fontSize: '11px', color: '#888' }}>
                                                     {item.numImages} {item.numImages === 1 ? 'image' : 'images'} • {item.aspectRatio}
@@ -1123,7 +850,7 @@ export default function ImageGenerator({
                                             }}
                                             title={(idx === 0 && isProcessingRef.current) ? 'Cannot remove' : 'Remove from queue'}
                                         >
-                                            ❌
+                                            X
                                         </button>
                                     </div>
                                 </div>
@@ -1134,15 +861,15 @@ export default function ImageGenerator({
                             <div style={{
                                 marginTop: '12px',
                                 padding: '10px',
-                                background: 'rgba(34, 197, 94, 0.1)',
-                                border: '1px solid #22c55e',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                border: '1px solid #333',
                                 borderRadius: '6px',
                                 textAlign: 'center',
                                 fontSize: '12px',
-                                color: '#22c55e',
+                                color: '#fff',
                                 fontWeight: '600'
                             }}>
-                                🔄 Queue is processing... Item 1 of {queue.length}
+                                Processing queue... Item 1 of {queue.length}
                             </div>
                         )}
                     </div>
@@ -1170,7 +897,7 @@ export default function ImageGenerator({
                         border: '2px dashed #333',
                         borderRadius: '12px'
                     }}>
-                        <div style={{ fontSize: '48px', marginBottom: '12px' }}>🖼️</div>
+                        <div style={{ fontSize: '48px', marginBottom: '12px', opacity: 0.2 }}>[]</div>
                         <p>Your generated images will appear here</p>
                     </div>
                 ) : (
@@ -1208,7 +935,7 @@ export default function ImageGenerator({
                                         style={{
                                             flex: 1,
                                             padding: '8px 12px',
-                                            background: '#fff',
+                                            background: '#333',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '6px',
@@ -1217,14 +944,14 @@ export default function ImageGenerator({
                                             fontWeight: '600'
                                         }}
                                     >
-                                        💾 Save
+                                        Save
                                     </button>
                                     <button
                                         onClick={() => handlePostToFanvue(imageUrl)}
                                         disabled={isPosting === imageUrl}
                                         style={{
                                             padding: '8px 12px',
-                                            background: '#0ea5e9',
+                                            background: '#333',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '6px',
@@ -1234,7 +961,7 @@ export default function ImageGenerator({
                                             opacity: isPosting === imageUrl ? 0.7 : 1
                                         }}
                                     >
-                                        {isPosting === imageUrl ? '⏳...' : '🚀 Post'}
+                                        {isPosting === imageUrl ? 'Posting...' : 'Post'}
                                     </button>
 
                                     <button
@@ -1253,7 +980,7 @@ export default function ImageGenerator({
                                             fontWeight: '600'
                                         }}
                                     >
-                                        🎬 → Chain
+                                        Chain
                                     </button>
 
                                     <a
@@ -1274,7 +1001,7 @@ export default function ImageGenerator({
                                             justifyContent: 'center'
                                         }}
                                     >
-                                        ⬇️
+                                        Download
                                     </a>
                                 </div>
                             </div>

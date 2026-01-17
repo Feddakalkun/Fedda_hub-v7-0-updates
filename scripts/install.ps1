@@ -254,11 +254,11 @@ function Install-FanvueHub {
 
     Set-Location $HubDir
     # Use portable node
-    & "$NodeExe" "npm" "install" "--legacy-peer-deps"
+    & "npm.cmd" "install" "--legacy-peer-deps"
     
     Write-Log "[Fanvue Hub] Initializing Database..."
-    & "$NodeExe" "npx" "prisma" "generate"
-    & "$NodeExe" "npx" "prisma" "db" "push"
+    & "npx.cmd" "prisma" "generate"
+    & "npx.cmd" "prisma" "db" "push"
     
     Set-Location $RootPath
     Write-Log "[Fanvue Hub] Setup complete."

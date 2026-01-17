@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useComfyProgress } from '@/hooks/useComfyProgress';
 import ImageGenerator from '@/components/ImageGenerator';
 import LipsyncGenerator from '@/components/LipsyncGenerator';
+import VoiceGenerator from '@/components/VoiceGenerator';
 import Library from '@/components/Library';
 
 import LTX2Generator from '@/components/LTX2Generator';
@@ -39,7 +40,7 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
 
     const [character, setCharacter] = useState<Character | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'image' | 'lipsync' | 'wan21' | 'qwen' | 'library' | 'settings'>('image');
+    const [activeTab, setActiveTab] = useState<'image' | 'lipsync' | 'phone' | 'wan21' | 'qwen' | 'library' | 'settings'>('image');
 
     // Persistent state for generated content (survives tab switches)
     const [generatedImages, setGeneratedImages] = useState<string[]>([]);
@@ -48,6 +49,16 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
     // Settings State
     const [editMode, setEditMode] = useState(false);
     const [editForm, setEditForm] = useState<Partial<Character>>({});
+
+    // Appearance customization state
+    const [age, setAge] = useState(22);
+    const [breastSize, setBreastSize] = useState(3);
+    const [height, setHeight] = useState(3);
+    const [bodyType, setBodyType] = useState('athletic');
+    const [skinTone, setSkinTone] = useState('fair');
+    const [hairColor, setHairColor] = useState('blonde');
+    const [hairLength, setHairLength] = useState(3);
+
 
     // Avatar Upload State
     const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -93,6 +104,68 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
 
     const handleConnect = () => {
         window.location.href = `/api/auth/fanvue?persona=${slug}`;
+    };
+
+    const generateAppearanceString = () => {
+        const parts: string[] = [];
+        parts.push(`${age} years old`);
+
+        const breastSizes: Record<number, string> = {
+            1: 'completely flat chest athletic tomboy physique',
+            2: 'petite perky A-cup breasts small delicate',
+            3: 'modest natural B-cup breasts perfect proportions',
+            4: 'medium shapely C-cup breasts feminine curves',
+            5: 'full voluptuous breasts ample cleavage',
+            6: 'large D-cup breasts generous bustline'
+        };
+        if (breastSizes[breastSize]) parts.push(breastSizes[breastSize]);
+
+        const heights: Record<number, string> = {
+            1: '150cm very petite small frame delicate',
+            2: '160cm petite slender build',
+            3: '168cm average height well-proportioned',
+            4: '175cm tall statuesque leggy',
+            5: '180cm very tall model height long legs'
+        };
+        if (heights[height]) parts.push(heights[height]);
+
+        const bodyTypes: Record<string, string> = {
+            slim: 'slim slender lean physique toned',
+            athletic: 'athletic fit toned defined muscles gym body',
+            curvy: 'curvy hourglass figure feminine soft curves',
+            thick: 'thick voluptuous plush body thicc'
+        };
+        if (bodyTypes[bodyType]) parts.push(bodyTypes[bodyType]);
+
+        const skinTones: Record<string, string> = {
+            pale: 'porcelain pale skin ivory complexion',
+            fair: 'fair skin natural light complexion',
+            tan: 'sun-kissed tan skin golden glow',
+            olive: 'olive skin Mediterranean complexion',
+            brown: 'brown skin rich caramel tone',
+            deep: 'deep dark skin ebony complexion'
+        };
+        if (skinTones[skinTone]) parts.push(skinTones[skinTone]);
+
+        const hairColors: Record<string, string> = {
+            blonde: 'blonde hair golden locks',
+            brunette: 'brunette hair chestnut brown',
+            black: 'black hair raven dark',
+            red: 'red hair fiery ginger',
+            auburn: 'auburn hair copper highlights'
+        };
+        if (hairColors[hairColor]) parts.push(hairColors[hairColor]);
+
+        const hairLengths: Record<number, string> = {
+            1: 'pixie cut short cropped hair',
+            2: 'short hair chin-length bob',
+            3: 'shoulder-length hair medium',
+            4: 'long hair flowing past shoulders',
+            5: 'very long hair waist-length cascading'
+        };
+        if (hairLengths[hairLength]) parts.push(hairLengths[hairLength]);
+
+        setEditForm(prev => ({ ...prev, appearance: parts.join(', ') }));
     };
 
     const handleSaveSettings = async () => {
@@ -492,12 +565,12 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
 
                 {/* Sidebar Navigation */}
                 <div style={{
-                    width: '240px',
+                    width: '220px',
                     background: '#050505',
                     borderRight: '1px solid rgba(255,255,255,0.06)',
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: '16px 8px'
+                    padding: '12px 8px'
                 }}>
                     <div style={{ padding: '0 12px 12px 12px', fontSize: '10px', fontWeight: 'bold', color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                         Tools
@@ -513,7 +586,7 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             style={{
-                                padding: '10px 12px',
+                                padding: '8px 12px',
                                 textAlign: 'left',
                                 background: activeTab === tab.id ? '#1a1a1a' : 'transparent',
                                 color: activeTab === tab.id ? '#fff' : '#666',
@@ -596,7 +669,7 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                         )}
 
                         {activeTab === 'settings' && (
-                            <div style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', maxWidth: '600px' }}>
+                            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', maxWidth: '600px' }}>
                                 <h3 style={{ marginBottom: '24px' }}>Character Settings</h3>
 
                                 <div style={{ display: 'grid', gap: '20px' }}>
@@ -643,8 +716,54 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                             style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                                         />
                                     </div>
+                                    {/* Appearance Builder */}
+                                    <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid #333', borderRadius: '8px' }}>
+                                        <h4 style={{ fontSize: '12px', fontWeight: '600', color: '#fff', marginBottom: '16px' }}>
+                                            PHYSICAL APPEARANCE BUILDER
+                                        </h4>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                            {/* Age */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Age: {age}</label>
+                                                <input type="range" min="18" max="45" value={age} onChange={e => setAge(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#fff' }} /></div>
+
+                                            {/* Breast Size */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Breast Size: {breastSize}</label>
+                                                <input type="range" min="1" max="6" value={breastSize} onChange={e => setBreastSize(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#fff' }} /></div>
+
+                                            {/* Height */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Height: {height}</label>
+                                                <input type="range" min="1" max="5" value={height} onChange={e => setHeight(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#fff' }} /></div>
+
+                                            {/* Hair Length */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Hair Length: {hairLength}</label>
+                                                <input type="range" min="1" max="5" value={hairLength} onChange={e => setHairLength(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#fff' }} /></div>
+
+                                            {/* Body Type */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Body Type</label>
+                                                <select value={bodyType} onChange={e => setBodyType(e.target.value)} style={{ width: '100%', padding: '8px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '4px' }}>
+                                                    <option value="slim">Slim</option><option value="athletic">Athletic</option><option value="curvy">Curvy</option><option value="thick">Thick</option>
+                                                </select></div>
+
+                                            {/* Skin Tone */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Skin Tone</label>
+                                                <select value={skinTone} onChange={e => setSkinTone(e.target.value)} style={{ width: '100%', padding: '8px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '4px' }}>
+                                                    <option value="pale">Pale</option><option value="fair">Fair</option><option value="tan">Tan</option><option value="olive">Olive</option><option value="brown">Brown</option><option value="deep">Deep</option>
+                                                </select></div>
+
+                                            {/* Hair Color */}
+                                            <div><label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '4px' }}>Hair Color</label>
+                                                <select value={hairColor} onChange={e => setHairColor(e.target.value)} style={{ width: '100%', padding: '8px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '4px' }}>
+                                                    <option value="blonde">Blonde</option><option value="brunette">Brunette</option><option value="black">Black</option><option value="red">Red</option><option value="auburn">Auburn</option>
+                                                </select></div>
+                                        </div>
+
+                                        <button onClick={generateAppearanceString} style={{ width: '100%', padding: '8px', background: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>
+                                            Convert Sliders to Text Prompt
+                                        </button>
+                                    </div>
+
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Appearance Prompt</label>
+                                        <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Appearance Prompt (Final)</label>
                                         <textarea
                                             value={editForm.appearance || ''}
                                             onChange={e => setEditForm({ ...editForm, appearance: e.target.value })}

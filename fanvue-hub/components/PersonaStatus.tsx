@@ -59,34 +59,33 @@ export default function PersonaStatus({ persona, personaName, personaColor }: Pe
                 {/* Fanvue Status */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
-                        <span>🚀</span>
                         <span>Fanvue</span>
                     </div>
                     {status.fanvue ? (
                         <span style={{
                             padding: '2px 6px',
-                            background: 'rgba(34, 197, 94, 0.2)',
-                            color: '#4ade80',
+                            background: '#333',
+                            color: '#fff',
                             borderRadius: '4px',
                             fontSize: '10px',
                             fontWeight: '600'
                         }}>
-                            ● {status.fanvueHandle ? `@${status.fanvueHandle}` : 'OK'}
+                            {status.fanvueHandle ? `@${status.fanvueHandle}` : 'CONNECTED'}
                         </span>
                     ) : (
                         <a
                             href="/accounts"
                             style={{
                                 padding: '2px 6px',
-                                background: 'rgba(239, 68, 68, 0.2)',
-                                color: '#f87171',
+                                background: '#333',
+                                color: '#ccc',
                                 borderRadius: '4px',
                                 fontSize: '10px',
                                 fontWeight: '600',
                                 textDecoration: 'none'
                             }}
                         >
-                            ○ SETUP
+                            SETUP
                         </a>
                     )}
                 </div>
@@ -94,13 +93,12 @@ export default function PersonaStatus({ persona, personaName, personaColor }: Pe
                 {/* X Status */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', opacity: 0.5 }}>
-                        <span>𝕏</span>
                         <span>X</span>
                     </div>
                     <span style={{
                         padding: '2px 6px',
-                        background: 'rgba(100, 100, 100, 0.2)',
-                        color: '#999',
+                        background: '#222',
+                        color: '#666',
                         borderRadius: '4px',
                         fontSize: '10px',
                         fontWeight: '600'
@@ -115,7 +113,7 @@ export default function PersonaStatus({ persona, personaName, personaColor }: Pe
                     href="/accounts"
                     style={{
                         fontSize: '11px',
-                        color: personaColor,
+                        color: '#aaa',
                         textDecoration: 'none',
                         display: 'flex',
                         alignItems: 'center',
@@ -123,7 +121,6 @@ export default function PersonaStatus({ persona, personaName, personaColor }: Pe
                         justifyContent: 'center'
                     }}
                 >
-                    <span>⚙️</span>
                     <span>Manage Accounts</span>
                 </a>
             </div>

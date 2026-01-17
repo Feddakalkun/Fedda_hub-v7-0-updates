@@ -1,0 +1,624 @@
+{
+  "153": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "268",
+        0
+      ],
+      "positive": [
+        "164",
+        0
+      ],
+      "negative": [
+        "164",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFGGuider"
+    }
+  },
+  "154": {
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "161": {
+    "inputs": {
+      "noise": [
+        "178",
+        0
+      ],
+      "guider": [
+        "153",
+        0
+      ],
+      "sampler": [
+        "154",
+        0
+      ],
+      "sigmas": [
+        "238",
+        0
+      ],
+      "latent_image": [
+        "166",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "162": {
+    "inputs": {
+      "width": [
+        "241",
+        1
+      ],
+      "height": [
+        "241",
+        2
+      ],
+      "length": [
+        "329",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLTXVLatentVideo",
+    "_meta": {
+      "title": "EmptyLTXVLatentVideo"
+    }
+  },
+  "164": {
+    "inputs": {
+      "frame_rate": 25,
+      "positive": [
+        "169",
+        0
+      ],
+      "negative": [
+        "298",
+        0
+      ]
+    },
+    "class_type": "LTXVConditioning",
+    "_meta": {
+      "title": "LTXVConditioning"
+    }
+  },
+  "166": {
+    "inputs": {
+      "video_latent": [
+        "239",
+        0
+      ],
+      "audio_latent": [
+        "248",
+        0
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "169": {
+    "inputs": {
+      "text": [
+        "302",
+        0
+      ],
+      "clip": [
+        "290",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "178": {
+    "inputs": {
+      "noise_seed": 320941488413659
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "190": {
+    "inputs": {
+      "frame_rate": 25,
+      "loop_count": 0,
+      "filename_prefix": "LTX-2",
+      "format": "video/h265-mp4",
+      "pix_fmt": "yuv420p10le",
+      "crf": 22,
+      "save_metadata": true,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "282",
+        0
+      ],
+      "audio": [
+        "244",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
+    }
+  },
+  "238": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 14,
+      "denoise": 1,
+      "model": [
+        "268",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "239": {
+    "inputs": {
+      "strength": 0.8,
+      "bypass": false,
+      "vae": [
+        "296",
+        0
+      ],
+      "image": [
+        "269",
+        0
+      ],
+      "latent": [
+        "162",
+        0
+      ]
+    },
+    "class_type": "LTXVImgToVideoInplace",
+    "_meta": {
+      "title": "LTXVImgToVideoInplace"
+    }
+  },
+  "241": {
+    "inputs": {
+      "width": [
+        "336",
+        0
+      ],
+      "height": [
+        "337",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "keep_proportion": "crop",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 32,
+      "device": "cpu",
+      "image": [
+        "303",
+        0
+      ]
+    },
+    "class_type": "ImageResizeKJv2",
+    "_meta": {
+      "title": "Resize Image v2"
+    }
+  },
+  "242": {
+    "inputs": {
+      "audio": [
+        "271",
+        0
+      ],
+      "audio_vae": [
+        "297",
+        0
+      ]
+    },
+    "class_type": "LTXVAudioVAEEncode",
+    "_meta": {
+      "title": "LTXV Audio VAE Encode"
+    }
+  },
+  "244": {
+    "inputs": {
+      "start_index": [
+        "319",
+        0
+      ],
+      "duration": [
+        "325",
+        0
+      ],
+      "audio": [
+        "305",
+        0
+      ]
+    },
+    "class_type": "TrimAudioDuration",
+    "_meta": {
+      "title": "Trim Audio Duration"
+    }
+  },
+  "245": {
+    "inputs": {
+      "av_latent": [
+        "161",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXVSeparateAVLatent"
+    }
+  },
+  "248": {
+    "inputs": {
+      "samples": [
+        "242",
+        0
+      ],
+      "mask": [
+        "249",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "249": {
+    "inputs": {
+      "value": 0,
+      "width": [
+        "241",
+        1
+      ],
+      "height": [
+        "241",
+        2
+      ]
+    },
+    "class_type": "SolidMask",
+    "_meta": {
+      "title": "SolidMask"
+    }
+  },
+  "268": {
+    "inputs": {
+      "sage_attention": "disabled",
+      "allow_compile": false,
+      "model": [
+        "285",
+        0
+      ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
+    }
+  },
+  "269": {
+    "inputs": {
+      "img_compression": 33,
+      "image": [
+        "241",
+        0
+      ]
+    },
+    "class_type": "LTXVPreprocess",
+    "_meta": {
+      "title": "LTXVPreprocess"
+    }
+  },
+  "271": {
+    "inputs": {
+      "model": [
+        "272",
+        0
+      ],
+      "audio": [
+        "244",
+        0
+      ]
+    },
+    "class_type": "MelBandRoFormerSampler",
+    "_meta": {
+      "title": "Mel-Band RoFormer Sampler"
+    }
+  },
+  "272": {
+    "inputs": {
+      "model_name": "MelBandRoformer_fp16.safetensors"
+    },
+    "class_type": "MelBandRoFormerModelLoader",
+    "_meta": {
+      "title": "Mel-Band RoFormer Model Loader"
+    }
+  },
+  "282": {
+    "inputs": {
+      "spatial_tiles": 2,
+      "spatial_overlap": 4,
+      "temporal_tile_length": 16,
+      "temporal_overlap": 4,
+      "last_frame_fix": false,
+      "working_device": "auto",
+      "working_dtype": "auto",
+      "vae": [
+        "296",
+        0
+      ],
+      "latents": [
+        "245",
+        0
+      ]
+    },
+    "class_type": "LTXVSpatioTemporalTiledVAEDecode",
+    "_meta": {
+      "title": "🅛🅣🅧 LTXV Spatio Temporal Tiled VAE Decode"
+    }
+  },
+  "283": {
+    "inputs": {
+      "lora_name": "HeroCam_LTX2_bucket113_step_1500.safetensors",
+      "strength_model": 0.85,
+      "model": [
+        "284",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoraLoaderModelOnly"
+    }
+  },
+  "284": {
+    "inputs": {
+      "lora_name": "ltx-2-19b-distilled-lora-384.safetensors",
+      "strength_model": 0.5,
+      "model": [
+        "295",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoraLoaderModelOnly"
+    }
+  },
+  "285": {
+    "inputs": {
+      "lora_name": "ltx-2-19b-ic-lora-detailer.safetensors",
+      "strength_model": 0.5,
+      "model": [
+        "283",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Detailer"
+    }
+  },
+  "290": {
+    "inputs": {
+      "clip_name1": "gemma_3_12B_it.safetensors",
+      "clip_name2": "ltx-2-19b-embeddings_connector_distill_bf16.safetensors",
+      "type": "ltxv",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader"
+    }
+  },
+  "292": {
+    "inputs": {
+      "audioUI": "",
+      "audio": [
+        "271",
+        0
+      ]
+    },
+    "class_type": "PreviewAudio",
+    "_meta": {
+      "title": "Preview Audio"
+    }
+  },
+  "294": {
+    "inputs": {},
+    "class_type": "FancyTimerNode",
+    "_meta": {
+      "title": "Execution Timer"
+    }
+  },
+  "295": {
+    "inputs": {
+      "unet_name": "ltx-2-19b-dev-fp8.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "296": {
+    "inputs": {
+      "vae_name": "LTX2_video_vae_bf16.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
+    },
+    "class_type": "VAELoaderKJ",
+    "_meta": {
+      "title": "VAELoader KJ"
+    }
+  },
+  "297": {
+    "inputs": {
+      "vae_name": "LTX2_audio_vae_bf16.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
+    },
+    "class_type": "VAELoaderKJ",
+    "_meta": {
+      "title": "VAELoader KJ"
+    }
+  },
+  "298": {
+    "inputs": {
+      "text": "blurry, out of focus, overexposed, underexposed, low contrast, washed out colors, excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted proportions, unnatural skin tones, deformed facial features, asymmetrical face, missing facial features, extra limbs, disfigured hands, wrong hand count, artifacts around text, unreadable text on shirt or hat, incorrect lettering on cap (“PNTR”), incorrect t-shirt slogan (“JUST DO IT”), missing microphone, misplaced microphone, inconsistent perspective, camera shake, incorrect depth of field, background too sharp, background clutter, distracting reflections, harsh shadows, inconsistent lighting direction, color banding, cartoonish rendering, 3D CGI look, unrealistic materials, uncanny valley effect, incorrect ethnicity, wrong gender, exaggerated expressions, smiling, laughing, exaggerated sadness, wrong gaze direction, eyes looking at camera, mismatched lip sync, silent or muted audio, distorted voice, robotic voice, echo, background noise, off-sync audio, missing sniff sounds, incorrect dialogue, added dialogue, repetitive speech, jittery movement, awkward pauses, incorrect timing, unnatural transitions, inconsistent framing, tilted camera, missing door or shelves, missing shallow depth of field, flat lighting, inconsistent tone, cinematic oversaturation, stylized filters, or AI artifacts.",
+      "clip": [
+        "290",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "302": {
+    "inputs": {
+      "prompt": "S looks directly at the camera with a loving smile, and lip-syncing with emotion"
+    },
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "Text Prompt"
+    }
+  },
+  "303": {
+    "inputs": {
+      "image": "Generated Image November 29, 2025 - op.jpeg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "305": {
+    "inputs": {
+      "audio": "yo… run-run-run… (Extend).mp3",
+      "audioUI": "",
+      "choose file to upload": "Audio"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
+    }
+  },
+  "319": {
+    "inputs": {
+      "value": 11
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Audio Start Time"
+    }
+  },
+  "325": {
+    "inputs": {
+      "value": 5
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Audio Duration"
+    }
+  },
+  "328": {
+    "inputs": {
+      "value": [
+        "325",
+        0
+      ],
+      "mode": "round"
+    },
+    "class_type": "JWFloatToInteger",
+    "_meta": {
+      "title": "Float to Integer"
+    }
+  },
+  "329": {
+    "inputs": {
+      "a": [
+        "328",
+        0
+      ],
+      "b": 25,
+      "operation": "multiply"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "Math Int"
+    }
+  },
+  "336": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "337": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "342": {
+    "inputs": {
+      "text": "=== DOWNLOAD REPORT ===\nTotal files: 9\nSuccessful downloads: 0\nAlready existed: 9\nInterrupted: 0\nFailed: 0\nMax concurrent: 3\nSpeed limit: Unlimited\nResume enabled: True\nValidation enabled: False\nAuto-organize: False\n\nDetails:\n✓ ltx-2-19b-distilled-lora-384.safetensors: Already exists (7.15 GB)\n✓ ltx-2-19b-ic-lora-detailer.safetensors: Already exists (2.44 GB)\n✓ HeroCam_LTX2_bucket113_step_1500.safetensors: Already exists (816.31 MB)\n✓ ltx-2-19b-dev-fp8.safetensors: Already exists (25.22 GB)\n✓ LTX2_video_vae_bf16.safetensors: Already exists (2.28 GB)\n✓ LTX2_audio_vae_bf16.safetensors: Already exists (207.65 MB)\n✓ ltx-2-19b-embeddings_connector_distill_bf16.safetensors: Already exists (2.67 GB)\n✓ gemma_3_12B_it.safetensors: Already exists (22.71 GB)\n✓ MelBandRoformer_fp16.safetensors: Already exists (435.33 MB)",
+      "anything": [
+        "343",
+        0
+      ]
+    },
+    "class_type": "easy showAnything",
+    "_meta": {
+      "title": "Show Any"
+    }
+  },
+  "343": {
+    "inputs": {
+      "download_links": "https://huggingface.co/Lightricks/LTX-2/resolve/main/ltx-2-19b-distilled-lora-384.safetensors loras\nhttps://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Detailer/resolve/main/ltx-2-19b-ic-lora-detailer.safetensors loras\nhttps://huggingface.co/Nebsh/LTX2_Herocam_Lora/resolve/main/HeroCam_LTX2_bucket113_step_1500.safetensors loras\nhttps://huggingface.co/Lightricks/LTX-2/resolve/main/ltx-2-19b-dev-fp8.safetensors diffusion_models\nhttps://huggingface.co/Kijai/LTXV2_comfy/resolve/main/VAE/LTX2_video_vae_bf16.safetensors vae\nhttps://huggingface.co/Kijai/LTXV2_comfy/resolve/main/VAE/LTX2_audio_vae_bf16.safetensors vae\nhttps://huggingface.co/Kijai/LTXV2_comfy/resolve/main/text_encoders/ltx-2-19b-embeddings_connector_distill_bf16.safetensors text_encoders\nhttps://huggingface.co/Comfy-Org/ltx-2/resolve/main/split_files/text_encoders/gemma_3_12B_it.safetensors text_encoders\nhttps://huggingface.co/Kijai/MelBandRoFormer_comfy/resolve/main/MelBandRoformer_fp16.safetensors diffusion_models",
+      "auto_download": true,
+      "max_concurrent_downloads": 3,
+      "max_download_speed_mbps": 0,
+      "enable_resume": true,
+      "validate_files": false,
+      "enable_notifications": true,
+      "auto_organize": false,
+      "hf_token": ""
+    },
+    "class_type": "HuggingFaceDownloader",
+    "_meta": {
+      "title": "🤗 HuggingFace Model Downloader Pro"
+    }
+  }
+}

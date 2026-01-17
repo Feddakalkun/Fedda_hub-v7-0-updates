@@ -274,5 +274,20 @@
     "name": "ComfyUI-mxToolkit",
     "url": "https://github.com/Smirnov75/ComfyUI-mxToolkit.git",
     "folder": "ComfyUI-mxToolkit"
+  },
+  {
+    "name": "CRT-Nodes",
+    "url": "https://github.com/PGCRT/CRT-Nodes.git",
+    "folder": "CRT-Nodes"
+  },
+  {
+    "name": "ComfyUI-MelBandRoFormer",
+    "url": "https://github.com/kijai/ComfyUI-MelBandRoFormer.git",
+    "folder": "ComfyUI-MelBandRoFormer"
+  },
+  {
+    "name": "ComfyUI-LTXVideo",
+    "url": "https://github.com/Lightricks/ComfyUI-LTXVideo.git",
+    "folder": "ComfyUI-LTXVideo"
   }
 ]

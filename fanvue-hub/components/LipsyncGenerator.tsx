@@ -188,8 +188,22 @@ export default function LipsyncGenerator({
                 const res = await fetch(`/api/comfyui/status/${promptId}`);
                 const data = await res.json();
 
-                if (data.status === 'done' && data.videoUrl) {
+                // Check for explicit video URL first (from robust backend)
+                if (data.status === 'success' && data.videoUrl) {
                     setGeneratedVideos(prev => [{ url: data.videoUrl, text }, ...prev]);
+                    setGenerationProgress(100);
+                    setTimeout(() => {
+                        setIsGenerating(false);
+                        setGenerationProgress(0);
+                    }, 1000);
+                    return;
+                }
+
+                // Fallback for image outputs (if any) or older backend
+                if (data.status === 'success' && data.outputs && data.outputs.length > 0) {
+                    // For lipsync, we really want a video. But if outputs are all we have...
+                    const videoUrl = data.outputs[0];
+                    setGeneratedVideos(prev => [{ url: videoUrl, text }, ...prev]);
                     setGenerationProgress(100);
                     setTimeout(() => {
                         setIsGenerating(false);

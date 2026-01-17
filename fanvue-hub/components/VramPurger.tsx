@@ -25,26 +25,26 @@ export default function VramPurger() {
             onClick={handlePurge}
             title="Clear VRAM (Unload Ollama Models)"
             style={{
-                background: status === 'done' ? 'rgba(16, 185, 129, 0.2)' : (status === 'cleaning' ? 'rgba(245, 158, 11, 0.2)' : 'transparent'),
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '8px',
+                background: status === 'done' ? '#333' : (status === 'cleaning' ? '#222' : 'transparent'),
+                border: '1px solid #333',
+                borderRadius: '4px',
                 padding: '0 12px',
-                height: '40px', // Match tab height usually
+                height: '32px', // Compact
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center', // Center text
                 gap: '8px',
-                color: status === 'done' ? '#6ee7b7' : (status === 'cleaning' ? '#fcd34d' : '#9ca3af'),
+                color: status === 'done' ? '#fff' : (status === 'cleaning' ? '#ccc' : '#666'),
                 transition: 'all 0.2s',
-                marginLeft: 'auto' // Push to right if in flex container
+                marginLeft: 'auto',
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
             }}
         >
-            <span style={{ fontSize: '16px' }}>
-                {status === 'cleaning' ? '♻️' : (status === 'done' ? '✅' : '🧹')}
-            </span>
-            <span style={{ fontSize: '12px', fontWeight: '500' }}>
-                {status === 'cleaning' ? 'Purging...' : (status === 'done' ? 'Cleaned' : 'Free VRAM')}
-            </span>
+            {status === 'cleaning' ? 'Purging...' : (status === 'done' ? 'Cleaned' : 'Free VRAM')}
         </button>
     );
 }
