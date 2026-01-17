@@ -591,8 +591,8 @@ export default function ImageGenerator({
 
                         {/* NSFW/Spicy Prompts Dropdown */}
                         <div>
-                            <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#ff69b4' }}>
-                                🔥 Spicy & Intimate
+                            <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#888' }}>
+                                Spicy & Intimate
                             </label>
                             <select
                                 onChange={(e) => e.target.value && setPrompt(e.target.value)}
@@ -600,8 +600,8 @@ export default function ImageGenerator({
                                     width: '100%',
                                     padding: '10px',
                                     background: 'black',
-                                    border: '1px solid #ff69b4',
-                                    color: '#ff69b4',
+                                    border: '1px solid #333',
+                                    color: 'white',
                                     borderRadius: '6px',
                                     fontSize: '12px',
                                     cursor: 'pointer'
@@ -638,8 +638,8 @@ export default function ImageGenerator({
 
                         {/* Explicit/Nude Prompts Dropdown */}
                         <div>
-                            <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#ff4444' }}>
-                                🔞 Explicit & Nude
+                            <label style={{ display: 'block', fontSize: '11px', marginBottom: '6px', color: '#888' }}>
+                                Explicit & Nude
                             </label>
                             <select
                                 onChange={(e) => e.target.value && setPrompt(e.target.value)}
@@ -647,8 +647,8 @@ export default function ImageGenerator({
                                     width: '100%',
                                     padding: '10px',
                                     background: 'black',
-                                    border: '1px solid #ff4444',
-                                    color: '#ff4444',
+                                    border: '1px solid #333',
+                                    color: 'white',
                                     borderRadius: '6px',
                                     fontSize: '12px',
                                     cursor: 'pointer'
@@ -727,7 +727,7 @@ export default function ImageGenerator({
                                     max="6"
                                     value={breastSize}
                                     onChange={(e) => setBreastSize(parseInt(e.target.value))}
-                                    style={{ width: '100%', accentColor: '#ba55d3' }}
+                                    style={{ width: '100%', accentColor: '#fff' }}
                                 />
                             </div>
 
@@ -735,7 +735,7 @@ export default function ImageGenerator({
                             <div>
                                 <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
                                     <span>📏 Height</span>
-                                    <span style={{ color: '#ba55d3', fontWeight: '600' }}>
+                                    <span style={{ color: '#fff', fontWeight: '600' }}>
                                         {['Very Petite (150cm)', 'Petite (160cm)', 'Average (168cm)', 'Tall (175cm)', 'Very Tall (180cm)'][height - 1]}
                                     </span>
                                 </label>
@@ -753,7 +753,7 @@ export default function ImageGenerator({
                             <div>
                                 <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', color: '#aaa' }}>
                                     <span>💇 Hair Length</span>
-                                    <span style={{ color: '#ba55d3', fontWeight: '600' }}>
+                                    <span style={{ color: '#fff', fontWeight: '600' }}>
                                         {['Pixie', 'Short', 'Shoulder', 'Long', 'Very Long'][hairLength - 1]}
                                     </span>
                                 </label>
