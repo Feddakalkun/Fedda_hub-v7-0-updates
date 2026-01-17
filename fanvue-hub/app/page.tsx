@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui';
 
 export default function LandingPage() {
     const [comfyReady, setComfyReady] = useState(false);
@@ -146,53 +147,58 @@ export default function LandingPage() {
                     </div>
                 )}
 
-                {/* CTA Button */}
+                {/* CTA Button - Premium Design */}
                 {comfyReady ? (
                     <Link href="/characters">
-                        <button style={{
-                            marginTop: '40px',
-                            padding: '16px 48px',
-                            background: 'transparent',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            color: 'white',
-                            fontSize: '14px',
-                            letterSpacing: '0.2em',
-                            textTransform: 'uppercase',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            backdropFilter: 'blur(10px)',
-                            borderRadius: '2px'
-                        }}
+                        <button
+                            style={{
+                                marginTop: '64px',
+                                padding: '20px 80px',
+                                background: 'transparent',
+                                color: 'white',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                letterSpacing: '0.3em',
+                                textTransform: 'uppercase',
+                                border: '2px solid white',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                boxShadow: '0 0 40px rgba(255,255,255,0.15)',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.background = 'white';
                                 e.currentTarget.style.color = 'black';
-                                e.currentTarget.style.boxShadow = '0 0 30px rgba(255,255,255,0.3)';
+                                e.currentTarget.style.boxShadow = '0 0 60px rgba(255,255,255,0.3)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.background = 'transparent';
                                 e.currentTarget.style.color = 'white';
-                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.boxShadow = '0 0 40px rgba(255,255,255,0.15)';
                             }}
                         >
                             Enter Studio
                         </button>
                     </Link>
                 ) : (
-                    <button style={{
-                        marginTop: '40px',
-                        padding: '16px 48px',
-                        background: 'transparent',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        color: '#666',
-                        fontSize: '14px',
-                        letterSpacing: '0.2em',
-                        textTransform: 'uppercase',
-                        cursor: 'not-allowed',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: '2px',
-                        opacity: 0.5
-                    }}>
-                        Enter Studio
+                    <button
+                        disabled
+                        style={{
+                            marginTop: '64px',
+                            padding: '20px 80px',
+                            background: 'transparent',
+                            color: '#666',
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            letterSpacing: '0.3em',
+                            textTransform: 'uppercase',
+                            border: '2px solid #333',
+                            cursor: 'not-allowed',
+                            opacity: 0.4,
+                        }}
+                    >
+                        Loading...
                     </button>
                 )}
 

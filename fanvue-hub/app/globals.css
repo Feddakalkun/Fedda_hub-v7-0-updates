@@ -1,50 +1,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Pure Minimalist - Landing Page Aesthetic */
+  /* Professional Monochrome Palette */
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
-  --bg-card: #111111;
+  --bg-tertiary: #141414;
+  --bg-card: #1a1a1a;
+  --bg-hover: #222222;
 
-  /* Elegant Borders - Subtle */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.15);
-  --border-hover: rgba(255, 255, 255, 0.25);
+  /* Clean Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-medium: rgba(255, 255, 255, 0.18);
+  --border-strong: rgba(255, 255, 255, 0.25);
 
-  /* Typography - Thin & Elegant */
+  /* Typography - Monochrome Only */
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --text-tertiary: rgba(255, 255, 255, 0.3);
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #737373;
+  --text-muted: #525252;
 
-  /* Accent Colors - Minimal Use */
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --accent-info: #3b82f6;
+  /* Functional Colors (subtle use) */
+  --accent-success: #22c55e;
   --accent-error: #ef4444;
+  --accent-warning: #f59e0b;
 
-  /* NO GRADIENTS - Monochrome Only */
+  /* Shadows - Deep & Cinematic */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.9);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.95);
 
-  /* Shadows - Subtle */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
-
-  /* Typography Scale */
-  --font-display: 'Inter', -apple-system, sans-serif;
-  --weight-thin: 300;
-  --weight-normal: 400;
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --weight-light: 300;
+  --weight-regular: 400;
   --weight-medium: 500;
+  --weight-semibold: 600;
 
-  /* Letter Spacing (wide tracking) */
-  --tracking-tight: -0.02em;
-  --tracking-normal: 0.05em;
-  --tracking-wide: 0.1em;
-  --tracking-widest: 0.2em;
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  /* Transitions - Slow & Cinematic */
-  --transition-fast: 200ms ease-out;
-  --transition-normal: 400ms ease-out;
-  --transition-slow: 800ms ease-out;
+  /* Border Radius (minimal) */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {

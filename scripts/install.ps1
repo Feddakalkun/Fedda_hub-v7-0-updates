@@ -311,12 +311,12 @@ $ComfyDir = Join-Path $RootPath "ComfyUI"
 Write-Log "Upgrading pip..."
 Run-Pip "install --upgrade pip wheel setuptools"
 
-Write-Log "Installing PyTorch (CUDA)..."
-Run-Pip "install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118"
-if ($LASTEXITCODE -ne 0) {
-    Write-Log "CUDA PyTorch failed, trying CPU..."
-    Run-Pip "install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu"
-}
+Write-Log "Installing PyTorch 2.5.1 (CUDA 12.4 - Stable)..."
+Write-Log "NOTE: Requires NVIDIA Drivers with CUDA 12.x support"
+Run-Pip "install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124"
+
+Write-Log "Installing Xformers 0.0.28.post3 (matching torch 2.5.1)..."
+Run-Pip "install xformers==0.0.28.post3 --index-url https://download.pytorch.org/whl/cu124"
 
 
 Write-Log "Installing Windows-compatible Triton (required for SageAttention)..."

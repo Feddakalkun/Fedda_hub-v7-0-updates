@@ -1,0 +1,558 @@
+{
+  "8": {
+    "inputs": {
+      "samples": [
+        "177",
+        0
+      ],
+      "vae": [
+        "199",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "54": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "290",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "177": {
+    "inputs": {
+      "add_noise": "disable",
+      "noise_seed": 863643254839435,
+      "steps": [
+        "256",
+        0
+      ],
+      "cfg": 1,
+      "sampler_name": "lcm",
+      "scheduler": "simple",
+      "start_at_step": [
+        "221",
+        0
+      ],
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable",
+      "model": [
+        "182",
+        0
+      ],
+      "positive": [
+        "237",
+        0
+      ],
+      "negative": [
+        "238",
+        0
+      ],
+      "latent_image": [
+        "178",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Advanced) Low Pass"
+    }
+  },
+  "178": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 18529813886356,
+      "steps": [
+        "256",
+        0
+      ],
+      "cfg": 1,
+      "sampler_name": "lcm",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": [
+        "221",
+        0
+      ],
+      "return_with_leftover_noise": "enable",
+      "model": [
+        "54",
+        0
+      ],
+      "positive": [
+        "237",
+        0
+      ],
+      "negative": [
+        "238",
+        0
+      ],
+      "latent_image": [
+        "239",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Advanced) High Pass"
+    }
+  },
+  "182": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "292",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "199": {
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "200": {
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "201": {
+    "inputs": {
+      "text": "A delicate petite very young-looking woman, appearing barely out of mid-teens, very slim toned ballerina build, firm petite buttocks elegantly shaped, long slender legs, face slimmer and more youthful with refined delicate features, small narrow jaw, prominent cheekbones, large weary eyes, long tangled dark hair slightly greasy and unwashed with visible roots and light grime clinging to strands, faint smudges of dirt on cheeks and around temples, clad only in shredded fragments of a once-white cotton top that barely drapes across her chest and falls short at the hips, wrists tied together above her head with thick rope secured to an exposed overhead pipe, standing upright on the cracked concrete floor of a vast abandoned warehouse, weak cold fluorescent tubes flickering in the distance, dusty shafts of light from broken windows, she slowly turns her head over her left shoulder to look back at the camera with wide uncertain eyes, faint shivering in her stretched posture, ultra realistic skin with visible texture, moisture, light unwashed grime and dirt streaks, cinematic moody lighting with strong contrast between cold light and deep shadows, shallow depth of field, medium three-quarter rear-to-profile shot, 8k photorealistic, smooth 3-second slow motion, desolate industrial tension atmosphere",
+      "clip": [
+        "200",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "202": {
+    "inputs": {
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+      "clip": [
+        "200",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "204": {
+    "inputs": {
+      "ckpt_name": "rife49.pth",
+      "clear_cache_after_n_frames": 16,
+      "multiplier": 4,
+      "fast_mode": false,
+      "ensemble": true,
+      "scale_factor": 1,
+      "frames": [
+        "206",
+        0
+      ]
+    },
+    "class_type": "RIFE VFI",
+    "_meta": {
+      "title": "RIFE VFI (recommend rife47 and rife49)"
+    }
+  },
+  "205": {
+    "inputs": {
+      "model_name": "RealESRGAN_x2.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "206": {
+    "inputs": {
+      "upscale_model": [
+        "205",
+        0
+      ],
+      "image": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "207": {
+    "inputs": {
+      "frame_rate": 16,
+      "loop_count": 0,
+      "filename_prefix": "wan2/upscaled/v2v",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 10,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": false,
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine preview video 16 fps"
+    }
+  },
+  "208": {
+    "inputs": {
+      "frame_rate": 60,
+      "loop_count": 0,
+      "filename_prefix": "wan/wan22",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": false,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "204",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine  final video 60 fps"
+    }
+  },
+  "209": {
+    "inputs": {
+      "model": [
+        "232",
+        0
+      ]
+    },
+    "class_type": "wanBlockSwap",
+    "_meta": {
+      "title": "WanVideoBlockSwap High Pass"
+    }
+  },
+  "210": {
+    "inputs": {
+      "model": [
+        "233",
+        0
+      ]
+    },
+    "class_type": "wanBlockSwap",
+    "_meta": {
+      "title": "WanVideoBlockSwap Low Pass"
+    }
+  },
+  "215": {
+    "inputs": {
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "FinalFrameSelector",
+    "_meta": {
+      "title": "Final Frame Selector"
+    }
+  },
+  "216": {
+    "inputs": {
+      "filename_prefix": "wan/wan22_lastframe",
+      "images": [
+        "215",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save last frame"
+    }
+  },
+  "219": {
+    "inputs": {
+      "a": [
+        "256",
+        0
+      ],
+      "b": 2
+    },
+    "class_type": "JWIntegerDiv",
+    "_meta": {
+      "title": "Integer Divide"
+    }
+  },
+  "221": {
+    "inputs": {
+      "value": [
+        "219",
+        0
+      ],
+      "mode": "round"
+    },
+    "class_type": "JWFloatToInteger",
+    "_meta": {
+      "title": "Float to Integer"
+    }
+  },
+  "230": {
+    "inputs": {
+      "unet_name": "wan2.2_t2v_high_noise_14B_Q5_K_M.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "231": {
+    "inputs": {
+      "unet_name": "wan2.2_t2v_low_noise_14B_Q5_K_M.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "232": {
+    "inputs": {
+      "any_01": [
+        "230",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Any Switch (rgthree)"
+    }
+  },
+  "233": {
+    "inputs": {
+      "any_01": [
+        "231",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "Any Switch (rgthree)"
+    }
+  },
+  "234": {
+    "inputs": {
+      "Xi": 5,
+      "Xf": 5,
+      "isfloatX": 0
+    },
+    "class_type": "mxSlider",
+    "_meta": {
+      "title": "clip lenght ( in seconds )"
+    }
+  },
+  "235": {
+    "inputs": {
+      "expression": "a*16",
+      "a": [
+        "234",
+        0
+      ]
+    },
+    "class_type": "MathExpression|pysssss",
+    "_meta": {
+      "title": "Math Expression 🐍"
+    }
+  },
+  "236": {
+    "inputs": {
+      "width": 480,
+      "height": 720,
+      "length": [
+        "235",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyHunyuanLatentVideo",
+    "_meta": {
+      "title": "Empty Latent Video"
+    }
+  },
+  "237": {
+    "inputs": {
+      "any_01": [
+        "255",
+        0
+      ],
+      "any_02": [
+        "255",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "pos"
+    }
+  },
+  "238": {
+    "inputs": {
+      "any_01": [
+        "202",
+        0
+      ],
+      "any_02": [
+        "202",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "neg"
+    }
+  },
+  "239": {
+    "inputs": {
+      "any_02": [
+        "236",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "latent"
+    }
+  },
+  "255": {
+    "inputs": {
+      "any_01": [
+        "201",
+        0
+      ]
+    },
+    "class_type": "Any Switch (rgthree)",
+    "_meta": {
+      "title": "pos"
+    }
+  },
+  "256": {
+    "inputs": {
+      "Xi": 6,
+      "Xf": 6,
+      "isfloatX": 0
+    },
+    "class_type": "mxSlider",
+    "_meta": {
+      "title": "Generation Steps"
+    }
+  },
+  "290": {
+    "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+        "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "lora_5": {
+        "on": true,
+        "lora": "wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors",
+        "strength": 3
+      },
+      "➕ Add Lora": "",
+      "model": [
+        "209",
+        0
+      ],
+      "clip": [
+        "200",
+        0
+      ]
+    },
+    "class_type": "Power Lora Loader (rgthree)",
+    "_meta": {
+      "title": "T2V HIGH LORA"
+    }
+  },
+  "292": {
+    "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+        "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "lora_5": {
+        "on": true,
+        "lora": "wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors",
+        "strength": 1.5
+      },
+      "➕ Add Lora": "",
+      "model": [
+        "210",
+        0
+      ],
+      "clip": [
+        "200",
+        0
+      ]
+    },
+    "class_type": "Power Lora Loader (rgthree)",
+    "_meta": {
+      "title": "T2V LOW LORA"
+    }
+  },
+  "295": {
+    "inputs": {
+      "download_links": "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors?download=true loras\nhttps://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors?download=true loras\nhttps://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors?download=true loras\nhttps://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors?download=true loras\nhttps://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x2.pth?download=true upscale_models\nhttps://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x4.pth?download=true upscale_models\nhttps://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x8.pth?download=true upscale_models\nhttps://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp16.safetensors?download=true text_encoders\nhttps://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true text_encoders\nhttps://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true vae\nhttps://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_high_noise_14B_Q8_0.gguf?download=true unet\nhttps://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_low_noise_14B_Q8_0.gguf?download=true unet\nhttps://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_high_noise_14B_Q8_0.gguf?download=true unet\nhttps://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_low_noise_14B_Q8_0.gguf?download=true unet\n",
+      "auto_download": true,
+      "max_concurrent_downloads": 3,
+      "max_download_speed_mbps": 0,
+      "enable_resume": true,
+      "validate_files": false,
+      "enable_notifications": true,
+      "auto_organize": false,
+      "hf_token": ""
+    },
+    "class_type": "HuggingFaceDownloader",
+    "_meta": {
+      "title": "🤗 HuggingFace Model Downloader Pro"
+    }
+  },
+  "296": {
+    "inputs": {
+      "text": "=== DOWNLOAD REPORT ===\nTotal files: 4\nSuccessful downloads: 4\nAlready existed: 0\nInterrupted: 0\nFailed: 0\nMax concurrent: 3\nSpeed limit: Unlimited\nResume enabled: True\nValidation enabled: False\nAuto-organize: False\n\nDetails:\n✓ wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors: Downloaded successfully to loras/ (585.10 MB)\n✓ wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors: Downloaded successfully to loras/ (585.10 MB)\n✓ wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors: Downloaded successfully to loras/ (605.25 MB)\n✓ wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors: Downloaded successfully to loras/ (705.22 MB)",
+      "anything": [
+        "295",
+        0
+      ]
+    },
+    "class_type": "easy showAnything",
+    "_meta": {
+      "title": "Show Any"
+    }
+  }
+}
