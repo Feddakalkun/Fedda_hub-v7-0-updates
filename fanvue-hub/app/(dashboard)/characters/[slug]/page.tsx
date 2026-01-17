@@ -487,214 +487,239 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                 </div>
             </div>
 
-            {/* Navigation - Full Width */}
-            <div style={{
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-                padding: '0 40px',
-                background: '#000'
-            }}>
-                <div style={{ display: 'flex', gap: '0' }}>
-                    <button onClick={() => setActiveTab('image')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'image' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'image' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Image</button>
-                    <button onClick={() => setActiveTab('lipsync')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'lipsync' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'lipsync' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Lipsync</button>
-                    <button onClick={() => setActiveTab('wan21')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'wan21' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'wan21' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Wan 2.1</button>
-                    <button onClick={() => setActiveTab('qwen')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'qwen' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'qwen' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Qwen</button>
+            {/* Main Layout: Sidebar + Content */}
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
 
-                    <div style={{ width: '40px' }} />
+                {/* Sidebar Navigation */}
+                <div style={{
+                    width: '240px',
+                    background: '#050505',
+                    borderRight: '1px solid rgba(255,255,255,0.06)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '16px 8px'
+                }}>
+                    <div style={{ padding: '0 12px 12px 12px', fontSize: '10px', fontWeight: 'bold', color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Tools
+                    </div>
 
-                    <button onClick={() => setActiveTab('library')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'library' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'library' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Library</button>
-                    <button onClick={() => setActiveTab('settings')} style={{ padding: '14px 20px', background: 'transparent', color: activeTab === 'settings' ? '#fff' : 'rgba(255,255,255,0.3)', border: 'none', borderBottom: activeTab === 'settings' ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer', fontWeight: '400', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}>Settings</button>
+                    {[
+                        { id: 'image' as const, label: 'Image Generator' },
+                        { id: 'lipsync' as const, label: 'Lipsync Video' },
+                        { id: 'wan21' as const, label: 'Wan 2.1 Video' },
+                        { id: 'qwen' as const, label: 'Qwen Editor' },
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            style={{
+                                padding: '10px 12px',
+                                textAlign: 'left',
+                                background: activeTab === tab.id ? '#1a1a1a' : 'transparent',
+                                color: activeTab === tab.id ? '#fff' : '#666',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '13px',
+                                marginBottom: '2px',
+                                transition: 'all 0.15s ease',
+                                fontWeight: activeTab === tab.id ? '500' : '400',
+                            }}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+
+                    <div style={{ height: '24px' }} />
+
+                    <div style={{ padding: '0 12px 12px 12px', fontSize: '10px', fontWeight: 'bold', color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Management
+                    </div>
+
+                    {[
+                        { id: 'library' as const, label: 'Content Library' },
+                        { id: 'settings' as const, label: 'Settings' },
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            style={{
+                                padding: '10px 12px',
+                                textAlign: 'left',
+                                background: activeTab === tab.id ? '#1a1a1a' : 'transparent',
+                                color: activeTab === tab.id ? '#fff' : '#666',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '13px',
+                                marginBottom: '2px',
+                                transition: 'all 0.15s ease',
+                                fontWeight: activeTab === tab.id ? '500' : '400',
+                            }}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
-            </div>
 
-            {/* Content Area - Full Width */}
-            <div style={{ flex: 1, padding: '40px', background: '#000' }}>
+                {/* Content Area - Full Width, No Padding */}
+                <div style={{ flex: 1, background: '#000', overflowY: 'auto' }}>
+                    <div style={{ maxWidth: '1600px', margin: '0 auto', height: '100%' }}>
 
-                {activeTab === 'image' && (
-                    <ImageGenerator
-                        characterSlug={slug}
-                        characterName={character.name}
-                        loraPath={character.loraPath}
-                        appearance={character.appearance}
-                        generatedImages={generatedImages}
-                        setGeneratedImages={setGeneratedImages}
-                    />
-                )}
+                        {activeTab === 'image' && (
+                            <ImageGenerator
+                                characterSlug={slug}
+                                characterName={character.name}
+                                loraPath={character.loraPath}
+                                appearance={character.appearance}
+                                generatedImages={generatedImages}
+                                setGeneratedImages={setGeneratedImages}
+                            />
+                        )}
 
-                {activeTab === 'lipsync' && (
-                    <LipsyncGenerator
-                        characterSlug={slug}
-                        characterName={character.name}
-                        avatarUrl={character.avatarUrl}
-                        generatedVideos={generatedVideos}
-                        setGeneratedVideos={setGeneratedVideos}
-                    />
-                )}
+                        {activeTab === 'lipsync' && (
+                            <LipsyncGenerator
+                                characterSlug={slug}
+                                characterName={character.name}
+                                avatarUrl={character.avatarUrl}
+                                generatedVideos={generatedVideos}
+                                setGeneratedVideos={setGeneratedVideos}
+                            />
+                        )}
 
-                {activeTab === 'wan21' && <LTX2Generator characterSlug={slug} />}
+                        {activeTab === 'wan21' && <LTX2Generator characterSlug={slug} />}
 
-                {activeTab === 'qwen' && <QwenGenerator characterSlug={slug} qwenLoraPath={character.qwenLoraPath} />}
+                        {activeTab === 'qwen' && <QwenGenerator characterSlug={slug} qwenLoraPath={character.qwenLoraPath} />}
 
-                {activeTab === 'library' && (
-                    <Library characterSlug={slug} />
-                )}
+                        {activeTab === 'library' && (
+                            <Library characterSlug={slug} />
+                        )}
 
-                {activeTab === 'settings' && (
-                    <div style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '24px' }}>Character Settings</h3>
+                        {activeTab === 'settings' && (
+                            <div style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', maxWidth: '600px' }}>
+                                <h3 style={{ marginBottom: '24px' }}>Character Settings</h3>
 
-                        <div style={{ display: 'grid', gap: '20px' }}>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Name</label>
-                                <input
-                                    value={editForm.name || ''}
-                                    onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Handle</label>
-                                <input
-                                    value={editForm.handle || ''}
-                                    onChange={e => setEditForm({ ...editForm, handle: e.target.value })}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Bio</label>
-                                <textarea
-                                    value={editForm.bio || ''}
-                                    onChange={e => setEditForm({ ...editForm, bio: e.target.value })}
-                                    rows={3}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>LoRA Filename (Z-Image / Flux)</label>
-                                <input
-                                    value={editForm.loraPath || ''}
-                                    onChange={e => setEditForm({ ...editForm, loraPath: e.target.value })}
-                                    placeholder="e.g. MyChar_v1.safetensors"
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Qwen LoRA Filename</label>
-                                <input
-                                    value={editForm.qwenLoraPath || ''}
-                                    onChange={e => setEditForm({ ...editForm, qwenLoraPath: e.target.value })}
-                                    placeholder="e.g. iris_qwen.safetensors"
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Appearance Prompt</label>
-                                <textarea
-                                    value={editForm.appearance || ''}
-                                    onChange={e => setEditForm({ ...editForm, appearance: e.target.value })}
-                                    placeholder="e.g. blonde hair, blue eyes, athletic build..."
-                                    rows={3}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
-                                />
-                            </div>
-
-                            {/* Fanvue Integration Settings */}
-                            <div style={{ padding: '16px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.1)', borderRadius: '2px' }}>
-                                <h4 style={{ fontSize: '14px', fontWeight: '400', color: '#38bdf8', marginTop: 0, marginBottom: '16px', letterSpacing: '0.05em' }}>FANVUE INTEGRATION</h4>
-                                <div style={{ display: 'grid', gap: '16px' }}>
+                                <div style={{ display: 'grid', gap: '20px' }}>
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fanvue Profile ID</label>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Name</label>
                                         <input
-                                            value={editForm.fanvueProfileId || ''}
-                                            onChange={e => setEditForm({ ...editForm, fanvueProfileId: e.target.value })}
-                                            placeholder="Found in Fanvue Dev Tools"
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
+                                            value={editForm.name || ''}
+                                            onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fanvue Secret (Token)</label>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Handle</label>
                                         <input
-                                            value={editForm.fanvueSecret || ''}
-                                            onChange={e => setEditForm({ ...editForm, fanvueSecret: e.target.value })}
-                                            type="password"
-                                            placeholder="Your automation token"
+                                            value={editForm.handle || ''}
+                                            onChange={e => setEditForm({ ...editForm, handle: e.target.value })}
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Bio</label>
+                                        <textarea
+                                            value={editForm.bio || ''}
+                                            onChange={e => setEditForm({ ...editForm, bio: e.target.value })}
+                                            rows={3}
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>LoRA Filename (Z-Image / Flux)</label>
+                                        <input
+                                            value={editForm.loraPath || ''}
+                                            onChange={e => setEditForm({ ...editForm, loraPath: e.target.value })}
+                                            placeholder="e.g. MyChar_v1.safetensors"
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Qwen LoRA Filename</label>
+                                        <input
+                                            value={editForm.qwenLoraPath || ''}
+                                            onChange={e => setEditForm({ ...editForm, qwenLoraPath: e.target.value })}
+                                            placeholder="e.g. iris_qwen.safetensors"
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Appearance Prompt</label>
+                                        <textarea
+                                            value={editForm.appearance || ''}
+                                            onChange={e => setEditForm({ ...editForm, appearance: e.target.value })}
+                                            placeholder="e.g. blonde hair, blue eyes, athletic build..."
+                                            rows={3}
                                             style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
                                         />
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* AI Brain Settings */}
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>LLM Model (Brain)</label>
-                                <select
-                                    value={editForm.llmModel || 'mistral'}
-                                    onChange={e => setEditForm({ ...editForm, llmModel: e.target.value })}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                >
-                                    <option value="mistral">mistral (Default)</option>
-                                    {ollamaModels.filter(m => m.name !== 'mistral').map((m: any) => (
-                                        <option key={m.name} value={m.name}>{m.name}</option>
-                                    ))}
-                                </select>
-                                <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-                                    Select the Ollama model to use for this character's responses.
-                                </p>
-                            </div>
+                                    {/* Fanvue Integration Settings */}
+                                    <div style={{ padding: '16px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.1)', borderRadius: '2px' }}>
+                                        <h4 style={{ fontSize: '14px', fontWeight: '400', color: '#38bdf8', marginTop: 0, marginBottom: '16px', letterSpacing: '0.05em' }}>FANVUE INTEGRATION</h4>
+                                        <div style={{ display: 'grid', gap: '16px' }}>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fanvue Profile ID</label>
+                                                <input
+                                                    value={editForm.fanvueProfileId || ''}
+                                                    onChange={e => setEditForm({ ...editForm, fanvueProfileId: e.target.value })}
+                                                    placeholder="Found in Fanvue Dev Tools"
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', marginBottom: '8px', color: '#888', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fanvue Secret (Token)</label>
+                                                <input
+                                                    value={editForm.fanvueSecret || ''}
+                                                    onChange={e => setEditForm({ ...editForm, fanvueSecret: e.target.value })}
+                                                    type="password"
+                                                    placeholder="Your automation token"
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '2px' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>System Instructions / Memory</label>
-                                <textarea
-                                    value={editForm.systemInstruction || ''}
-                                    onChange={e => setEditForm({ ...editForm, systemInstruction: e.target.value })}
-                                    placeholder="Define personality rules, formatting constraints, or persistent memories here. (e.g. 'Start every sentence with *sigh*', 'You are secretly a spy')"
-                                    rows={5}
-                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px', fontFamily: 'monospace', fontSize: '12px' }}
-                                />
-                            </div>
+                                    {/* AI Brain Settings */}
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>LLM Model (Brain)</label>
+                                        <select
+                                            value={editForm.llmModel || 'mistral'}
+                                            onChange={e => setEditForm({ ...editForm, llmModel: e.target.value })}
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                        >
+                                            <option value="mistral">mistral (Default)</option>
+                                            {ollamaModels.filter(m => m.name !== 'mistral').map((m: any) => (
+                                                <option key={m.name} value={m.name}>{m.name}</option>
+                                            ))}
+                                        </select>
+                                        <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                                            Select the Ollama model to use for this character's responses.
+                                        </p>
+                                    </div>
 
-                            {/* Voice Settings */}
-                            <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #333' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                    <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#aaa', margin: 0 }}>Voice Settings</h4>
-                                    <button
-                                        onClick={async (e) => {
-                                            e.preventDefault();
-                                            const text = "Hello! This is a voice preview.";
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>System Instructions / Memory</label>
+                                        <textarea
+                                            value={editForm.systemInstruction || ''}
+                                            onChange={e => setEditForm({ ...editForm, systemInstruction: e.target.value })}
+                                            placeholder="Define personality rules, formatting constraints, or persistent memories here. (e.g. 'Start every sentence with *sigh*', 'You are secretly a spy')"
+                                            rows={5}
+                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px', fontFamily: 'monospace', fontSize: '12px' }}
+                                        />
+                                    </div>
 
-                                            // Browser Fallback (Fast)
-                                            if (editForm.voiceProvider === 'browser') {
-                                                if (window.speechSynthesis) {
-                                                    window.speechSynthesis.cancel();
-                                                    const u = new SpeechSynthesisUtterance(text);
-                                                    const voices = window.speechSynthesis.getVoices();
-                                                    // Try to match female voice
-                                                    const v = voices.find(x => x.name.includes('Female') || x.name.includes('Google US English'));
-                                                    if (v) u.voice = v;
-                                                    u.pitch = 1.1;
-                                                    window.speechSynthesis.speak(u);
-                                                }
-                                                return;
-                                            }
+                                    {/* Voice Settings */}
+                                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #333' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                            <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#aaa', margin: 0 }}>Voice Settings</h4>
+                                            <button
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    const text = "Hello! This is a voice preview.";
 
-                                            // API Call
-                                            try {
-                                                const res = await fetch('/api/gemini/tts', {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({
-                                                        text,
-                                                        voiceProvider: editForm.voiceProvider,
-                                                        voiceModel: editForm.voiceModel,
-                                                        voiceId: editForm.voiceId,
-                                                        voiceDescription: editForm.voiceDescription
-                                                    })
-                                                });
-                                                if (!res.ok) {
-                                                    const err = await res.json();
-                                                    // Should we fallback to browser if Gemini failed? 
-                                                    // Yes, to match PhoneCall behavior.
-                                                    if ((editForm.voiceProvider || 'gemini') === 'gemini') {
-                                                        console.warn("Gemini Preview failed, falling back to browser:", err);
+                                                    // Browser Fallback (Fast)
+                                                    if (editForm.voiceProvider === 'browser') {
                                                         if (window.speechSynthesis) {
                                                             window.speechSynthesis.cancel();
                                                             const u = new SpeechSynthesisUtterance(text);
@@ -704,176 +729,210 @@ export default function CharacterDashboard({ params }: { params: Promise<{ slug:
                                                             if (v) u.voice = v;
                                                             u.pitch = 1.1;
                                                             window.speechSynthesis.speak(u);
-                                                            return;
                                                         }
+                                                        return;
                                                     }
 
-                                                    // For ElevenLabs or other errors, show alert
-                                                    alert("Preview Failed: " + (err.error || "Unknown Error") + "\n" + (err.details ? JSON.stringify(err.details) : ""));
-                                                    return;
-                                                }
-                                                const blob = await res.blob();
-                                                new Audio(URL.createObjectURL(blob)).play();
-                                            } catch (e: any) {
-                                                alert("Error: " + e.message);
-                                            }
-                                        }}
-                                        style={{ fontSize: '12px', padding: '6px 12px', background: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                                    >
-                                        ▶ Play Preview
-                                    </button>
-                                </div>
+                                                    // API Call
+                                                    try {
+                                                        const res = await fetch('/api/gemini/tts', {
+                                                            method: 'POST',
+                                                            headers: { 'Content-Type': 'application/json' },
+                                                            body: JSON.stringify({
+                                                                text,
+                                                                voiceProvider: editForm.voiceProvider,
+                                                                voiceModel: editForm.voiceModel,
+                                                                voiceId: editForm.voiceId,
+                                                                voiceDescription: editForm.voiceDescription
+                                                            })
+                                                        });
+                                                        if (!res.ok) {
+                                                            const err = await res.json();
+                                                            // Should we fallback to browser if Gemini failed? 
+                                                            // Yes, to match PhoneCall behavior.
+                                                            if ((editForm.voiceProvider || 'gemini') === 'gemini') {
+                                                                console.warn("Gemini Preview failed, falling back to browser:", err);
+                                                                if (window.speechSynthesis) {
+                                                                    window.speechSynthesis.cancel();
+                                                                    const u = new SpeechSynthesisUtterance(text);
+                                                                    const voices = window.speechSynthesis.getVoices();
+                                                                    // Try to match female voice
+                                                                    const v = voices.find(x => x.name.includes('Female') || x.name.includes('Google US English'));
+                                                                    if (v) u.voice = v;
+                                                                    u.pitch = 1.1;
+                                                                    window.speechSynthesis.speak(u);
+                                                                    return;
+                                                                }
+                                                            }
 
-                                {/* Provider Selector */}
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Provider</label>
-                                    <select
-                                        value={editForm.voiceProvider || 'gemini'}
-                                        onChange={e => setEditForm({ ...editForm, voiceProvider: e.target.value })}
-                                        style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                    >
-                                        <option value="gemini">Gemini (Experimental)</option>
-                                        <option value="elevenlabs">ElevenLabs (Paid)</option>
-                                        <option value="uberduck">Uberduck (Cost-Effective)</option>
-                                        <option value="azure">Azure (Best Free Tier)</option>
-                                        <option value="google">Google Cloud (Good Free Tier)</option>
-                                        <option value="polly">AWS Polly (Reliable)</option>
-                                        <option value="browser">Browser (Local Free)</option>
-                                    </select>
-                                </div>
+                                                            // For ElevenLabs or other errors, show alert
+                                                            alert("Preview Failed: " + (err.error || "Unknown Error") + "\n" + (err.details ? JSON.stringify(err.details) : ""));
+                                                            return;
+                                                        }
+                                                        const blob = await res.blob();
+                                                        new Audio(URL.createObjectURL(blob)).play();
+                                                    } catch (e: any) {
+                                                        alert("Error: " + e.message);
+                                                    }
+                                                }}
+                                                style={{ fontSize: '12px', padding: '6px 12px', background: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                                            >
+                                                ▶ Play Preview
+                                            </button>
+                                        </div>
 
-                                {/* Azure Voice Settings */}
-                                {editForm.voiceProvider === 'azure' && (
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Azure Voice Model</label>
-                                        <select
-                                            value={editForm.voiceModel || 'en-US-AriaNeural'}
-                                            onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                        >
-                                            <option value="en-US-AriaNeural">Aria (Natural & Versatile)</option>
-                                            <option value="en-US-JennyNeural">Jenny (Friendly & Professional)</option>
-                                            <option value="en-US-SaraNeural">Sara (Young Adult)</option>
-                                            <option value="en-US-AnaNeural">Ana (Warm)</option>
-                                        </select>
-                                    </div>
-                                )}
-
-                                {/* Google Voice Settings */}
-                                {editForm.voiceProvider === 'google' && (
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Google Voice Model</label>
-                                        <select
-                                            value={editForm.voiceModel || 'en-US-Wavenet-F'}
-                                            onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                        >
-                                            <option value="en-US-Wavenet-F">Wavenet F (Warm Female)</option>
-                                            <option value="en-US-Wavenet-C">Wavenet C (Professional Female)</option>
-                                            <option value="en-US-Wavenet-E">Wavenet E (Mature Female)</option>
-                                            <option value="en-US-Neural2-C">Neural2 C (High Quality)</option>
-                                            <option value="en-US-Neural2-F">Neural2 F (High Quality)</option>
-                                        </select>
-                                    </div>
-                                )}
-
-                                {/* Polly Voice Settings */}
-                                {editForm.voiceProvider === 'polly' && (
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Polly Voice Model</label>
-                                        <select
-                                            value={editForm.voiceModel || 'Joanna'}
-                                            onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                        >
-                                            <option value="Joanna">Joanna (Professional US)</option>
-                                            <option value="Kendra">Kendra (Female US)</option>
-                                            <option value="Salli">Salli (Teen/Young Adult)</option>
-                                            <option value="Kimberly">Kimberly (Energetic)</option>
-                                            <option value="Ruth">Ruth (Mature)</option>
-                                        </select>
-                                    </div>
-                                )}
-
-                                {(editForm.voiceProvider === 'elevenlabs') && (
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>ElevenLabs Voice ID</label>
-                                        <input
-                                            value={editForm.voiceId || ''}
-                                            onChange={e => setEditForm({ ...editForm, voiceId: e.target.value })}
-                                            placeholder="Voice ID"
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Uberduck Voice Settings */}
-                                {editForm.voiceProvider === 'uberduck' && (
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Uberduck Voice Model (Slug or UUID)</label>
-                                        <input
-                                            value={editForm.voiceId || ''}
-                                            onChange={e => setEditForm({ ...editForm, voiceId: e.target.value })}
-                                            placeholder="e.g. polly_salli or a UUID"
-                                            style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                        />
-                                        <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Examples: polly_salli, voice_en_female_01. Find more at app.uberduck.ai/voices</p>
-                                    </div>
-                                )}
-
-                                {(!editForm.voiceProvider || editForm.voiceProvider === 'gemini') && (
-                                    <div>
-                                        <h4 style={{ display: 'none' }}>Hidden</h4>
-
+                                        {/* Provider Selector */}
                                         <div style={{ marginBottom: '16px' }}>
-                                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Model</label>
+                                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Provider</label>
                                             <select
-                                                value={editForm.voiceModel || 'Puck'}
-                                                onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
+                                                value={editForm.voiceProvider || 'gemini'}
+                                                onChange={e => setEditForm({ ...editForm, voiceProvider: e.target.value })}
                                                 style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                                             >
-                                                <option value="Puck">Puck (Default)</option>
-                                                <option value="Charon">Charon</option>
-                                                <option value="Kore">Kore</option>
-                                                <option value="Fenrir">Fenrir</option>
-                                                <option value="Aoede">Aoede</option>
+                                                <option value="gemini">Gemini (Experimental)</option>
+                                                <option value="elevenlabs">ElevenLabs (Paid)</option>
+                                                <option value="uberduck">Uberduck (Cost-Effective)</option>
+                                                <option value="azure">Azure (Best Free Tier)</option>
+                                                <option value="google">Google Cloud (Good Free Tier)</option>
+                                                <option value="polly">AWS Polly (Reliable)</option>
+                                                <option value="browser">Browser (Local Free)</option>
                                             </select>
-                                            <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Choose a base voice model</p>
                                         </div>
 
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Description (Optional)</label>
-                                            <textarea
-                                                value={editForm.voiceDescription || ''}
-                                                onChange={e => setEditForm({ ...editForm, voiceDescription: e.target.value })}
-                                                placeholder="e.g. Young female voice, energetic and playful, slightly raspy..."
-                                                rows={2}
-                                                style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                            />
-                                            <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Describe the voice characteristics in natural language</p>
-                                        </div>
+                                        {/* Azure Voice Settings */}
+                                        {editForm.voiceProvider === 'azure' && (
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Azure Voice Model</label>
+                                                <select
+                                                    value={editForm.voiceModel || 'en-US-AriaNeural'}
+                                                    onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                >
+                                                    <option value="en-US-AriaNeural">Aria (Natural & Versatile)</option>
+                                                    <option value="en-US-JennyNeural">Jenny (Friendly & Professional)</option>
+                                                    <option value="en-US-SaraNeural">Sara (Young Adult)</option>
+                                                    <option value="en-US-AnaNeural">Ana (Warm)</option>
+                                                </select>
+                                            </div>
+                                        )}
+
+                                        {/* Google Voice Settings */}
+                                        {editForm.voiceProvider === 'google' && (
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Google Voice Model</label>
+                                                <select
+                                                    value={editForm.voiceModel || 'en-US-Wavenet-F'}
+                                                    onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                >
+                                                    <option value="en-US-Wavenet-F">Wavenet F (Warm Female)</option>
+                                                    <option value="en-US-Wavenet-C">Wavenet C (Professional Female)</option>
+                                                    <option value="en-US-Wavenet-E">Wavenet E (Mature Female)</option>
+                                                    <option value="en-US-Neural2-C">Neural2 C (High Quality)</option>
+                                                    <option value="en-US-Neural2-F">Neural2 F (High Quality)</option>
+                                                </select>
+                                            </div>
+                                        )}
+
+                                        {/* Polly Voice Settings */}
+                                        {editForm.voiceProvider === 'polly' && (
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Polly Voice Model</label>
+                                                <select
+                                                    value={editForm.voiceModel || 'Joanna'}
+                                                    onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                >
+                                                    <option value="Joanna">Joanna (Professional US)</option>
+                                                    <option value="Kendra">Kendra (Female US)</option>
+                                                    <option value="Salli">Salli (Teen/Young Adult)</option>
+                                                    <option value="Kimberly">Kimberly (Energetic)</option>
+                                                    <option value="Ruth">Ruth (Mature)</option>
+                                                </select>
+                                            </div>
+                                        )}
+
+                                        {(editForm.voiceProvider === 'elevenlabs') && (
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>ElevenLabs Voice ID</label>
+                                                <input
+                                                    value={editForm.voiceId || ''}
+                                                    onChange={e => setEditForm({ ...editForm, voiceId: e.target.value })}
+                                                    placeholder="Voice ID"
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                />
+                                            </div>
+                                        )}
+
+                                        {/* Uberduck Voice Settings */}
+                                        {editForm.voiceProvider === 'uberduck' && (
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Uberduck Voice Model (Slug or UUID)</label>
+                                                <input
+                                                    value={editForm.voiceId || ''}
+                                                    onChange={e => setEditForm({ ...editForm, voiceId: e.target.value })}
+                                                    placeholder="e.g. polly_salli or a UUID"
+                                                    style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                />
+                                                <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Examples: polly_salli, voice_en_female_01. Find more at app.uberduck.ai/voices</p>
+                                            </div>
+                                        )}
+
+                                        {(!editForm.voiceProvider || editForm.voiceProvider === 'gemini') && (
+                                            <div>
+                                                <h4 style={{ display: 'none' }}>Hidden</h4>
+
+                                                <div style={{ marginBottom: '16px' }}>
+                                                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Model</label>
+                                                    <select
+                                                        value={editForm.voiceModel || 'Puck'}
+                                                        onChange={e => setEditForm({ ...editForm, voiceModel: e.target.value })}
+                                                        style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                    >
+                                                        <option value="Puck">Puck (Default)</option>
+                                                        <option value="Charon">Charon</option>
+                                                        <option value="Kore">Kore</option>
+                                                        <option value="Fenrir">Fenrir</option>
+                                                        <option value="Aoede">Aoede</option>
+                                                    </select>
+                                                    <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Choose a base voice model</p>
+                                                </div>
+
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '8px', color: '#888' }}>Voice Description (Optional)</label>
+                                                    <textarea
+                                                        value={editForm.voiceDescription || ''}
+                                                        onChange={e => setEditForm({ ...editForm, voiceDescription: e.target.value })}
+                                                        placeholder="e.g. Young female voice, energetic and playful, slightly raspy..."
+                                                        rows={2}
+                                                        style={{ width: '100%', padding: '12px', background: 'black', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                                    />
+                                                    <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Describe the voice characteristics in natural language</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
-                                <button
-                                    onClick={handleDelete}
-                                    style={{ color: '#f87171', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}
-                                >
-                                    Delete Character
-                                </button>
-                                <button
-                                    onClick={handleSaveSettings}
-                                    style={{ padding: '12px 32px', background: '#fff', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-                                >
-                                    Save Changes
-                                </button>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
+                                        <button
+                                            onClick={handleDelete}
+                                            style={{ color: '#f87171', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}
+                                        >
+                                            Delete Character
+                                        </button>
+                                        <button
+                                            onClick={handleSaveSettings}
+                                            style={{ padding: '12px 32px', background: '#fff', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
-                )}
+                </div>
             </div>
-        </div >
+        </div>
     );
 }
