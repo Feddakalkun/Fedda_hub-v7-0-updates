@@ -284,7 +284,7 @@ export default function LipsyncGenerator({
             }}>
                 <div>
                     <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>
-                        🎬 Lipsync Video Generator
+                        Lipsync Video Generator
                     </h3>
                     <p style={{ fontSize: '13px', color: '#666' }}>
                         Create talking head videos for {characterName} using VoxCPM + ComfyUI
@@ -333,7 +333,7 @@ export default function LipsyncGenerator({
                         </div>
                     )}
                     <p style={{ fontSize: '11px', color: '#666', marginTop: '6px' }}>
-                        💡 Use your character's avatar or any generated image
+                        Use your character's avatar or any generated image
                     </p>
                 </div>
 
@@ -415,7 +415,7 @@ export default function LipsyncGenerator({
                                 style={{ display: 'none' }}
                                 disabled={isUploading || !!selectedPresetVoice}
                             />
-                            {isUploading ? '⏳ Uploading & Transcribing...' : (uploadedVoiceName || '📁 Drag & Drop or Click to Upload...')}
+                            {isUploading ? 'Uploading & Transcribing...' : (uploadedVoiceName || 'Drag & Drop or Click to Upload...')}
                         </label>
                         {uploadedVoiceName && (
                             <button
@@ -452,9 +452,9 @@ export default function LipsyncGenerator({
                                 style={{
                                     flex: 1,
                                     padding: '8px',
-                                    background: resolution === res ? '#f59e0b' : 'rgba(255,255,255,0.1)',
-                                    border: '1px solid ' + (resolution === res ? '#f59e0b' : '#333'),
-                                    color: 'white',
+                                    background: resolution === res ? '#fff' : 'rgba(255,255,255,0.1)',
+                                    border: '1px solid ' + (resolution === res ? '#fff' : '#333'),
+                                    color: resolution === res ? '#000' : 'white',
                                     borderRadius: '6px',
                                     cursor: 'pointer',
                                     fontSize: '13px',
@@ -491,7 +491,7 @@ export default function LipsyncGenerator({
                         }}
                     />
                     <p style={{ fontSize: '11px', color: '#666', marginTop: '6px' }}>
-                        ⏱️ Keep it under 30 seconds for best results
+                        Keep it under 30 seconds for best results
                     </p>
                 </div>
 
@@ -499,10 +499,10 @@ export default function LipsyncGenerator({
                 {isGenerating && (
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <span style={{ fontSize: '13px', color: '#a78bfa', fontWeight: '600' }}>
-                                {generationProgress < 50 ? '🎤 Generating Audio...' :
-                                    generationProgress < 80 ? '🎬 Creating Video...' :
-                                        '✨ Finalizing...'}
+                            <span style={{ fontSize: '13px', color: '#fff', fontWeight: '600' }}>
+                                {generationProgress < 50 ? 'Generating Audio...' :
+                                    generationProgress < 80 ? 'Creating Video...' :
+                                        'Finalizing...'}
                             </span>
                             <span style={{ fontSize: '12px', color: '#888' }}>
                                 {Math.round(generationProgress)}%
@@ -519,9 +519,9 @@ export default function LipsyncGenerator({
                             <div style={{
                                 width: `${generationProgress}%`,
                                 height: '100%',
-                                background: 'linear-gradient(90deg, #f59e0b 0%, #ef4444 100%)',
+                                background: '#fff',
                                 transition: 'width 0.3s ease',
-                                boxShadow: generationProgress > 0 ? '0 0 10px rgba(245, 158, 11, 0.5)' : 'none'
+                                boxShadow: 'none'
                             }} />
                         </div>
                     </div>
@@ -533,8 +533,8 @@ export default function LipsyncGenerator({
                     disabled={isGenerating || !referenceImage}
                     style={{
                         padding: '14px 24px',
-                        background: isGenerating || !referenceImage ? '#444' : 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
-                        color: 'white',
+                        background: isGenerating || !referenceImage ? '#444' : '#fff',
+                        color: isGenerating || !referenceImage ? '#666' : '#000',
                         border: 'none',
                         borderRadius: '8px',
                         cursor: isGenerating || !referenceImage ? 'not-allowed' : 'pointer',
@@ -544,12 +544,12 @@ export default function LipsyncGenerator({
                         transition: 'all 0.2s'
                     }}
                 >
-                    {isGenerating ? '⏳ Generating...' : '🎬 Generate Lipsync Video'}
+                    {isGenerating ? 'Generating...' : 'Generate Lipsync Video'}
                 </button>
 
                 {!referenceImage && (
                     <p style={{ fontSize: '12px', color: '#f87171', textAlign: 'center' }}>
-                        ⚠️ Please provide a reference image first
+                        Please provide a reference image first
                     </p>
                 )}
             </div>
@@ -619,8 +619,8 @@ export default function LipsyncGenerator({
                                             style={{
                                                 flex: 1,
                                                 padding: '8px 12px',
-                                                background: '#6366f1',
-                                                color: 'white',
+                                                background: '#fff',
+                                                color: '#000',
                                                 border: 'none',
                                                 borderRadius: '6px',
                                                 cursor: 'pointer',
@@ -628,15 +628,15 @@ export default function LipsyncGenerator({
                                                 fontWeight: '600'
                                             }}
                                         >
-                                            💾 Save to Library
+                                            Save to Library
                                         </button>
                                         <button
                                             onClick={() => handlePostToFanvue(video.url, video.text)}
                                             disabled={isPosting === video.url}
                                             style={{
                                                 padding: '8px 12px',
-                                                background: '#0ea5e9',
-                                                color: 'white',
+                                                background: '#fff',
+                                                color: '#000',
                                                 border: 'none',
                                                 borderRadius: '6px',
                                                 cursor: isPosting === video.url ? 'not-allowed' : 'pointer',
@@ -645,7 +645,7 @@ export default function LipsyncGenerator({
                                                 opacity: isPosting === video.url ? 0.7 : 1
                                             }}
                                         >
-                                            {isPosting === video.url ? '⏳...' : '🚀 Post'}
+                                            {isPosting === video.url ? 'Posting...' : 'Post'}
                                         </button>
                                         <button
                                             onClick={() => {
@@ -653,7 +653,7 @@ export default function LipsyncGenerator({
                                             }}
                                             style={{
                                                 padding: '8px 12px',
-                                                background: '#8b5cf6',
+                                                background: '#333',
                                                 color: 'white',
                                                 border: 'none',
                                                 borderRadius: '6px',
@@ -662,7 +662,7 @@ export default function LipsyncGenerator({
                                                 fontWeight: '600'
                                             }}
                                         >
-                                            🎬 → Chain
+                                            Chain
                                         </button>
                                         <a
                                             href={video.url}
